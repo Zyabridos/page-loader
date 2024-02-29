@@ -1,28 +1,25 @@
 import axios from "axios";
 import fsp from 'fs/promises'
 import path from "path";
-import { URL } from 'url';
 import { join } from "path";
-
-const createFileName = (site) => {
-  const fileFormat = '.html';
-  const url = new URL(site);
-  const hostname = url.hostname.split('.').join('-');
-  const pathname = url.pathname.split('/').join('-');
-  return `${hostname}${pathname}${fileFormat}`
-}
+import { createFileName, makeDirectory} from "../utils/url.js";
 
 const exampleFilePath = path.resolve(process.cwd(), '__fixtures__/expected');
 
 const pageLoader = (site, filepath = './') => {
-  const fileName = createFileName(site);
+  const fileNameHTML = createFileName(site, '.html');
+  const fileNameImage = createFileName(site, '.png');
+  const initialFolder = createFileName(site, '');
+  const filesFolder = createFileName(site, '_files');
+  makeDirectory(initialFolder, filesFolder);
   const listPromise = fetch(site)
   .then((response) => {
     return response.text();
   })
   .then((fileContent) => {
-    fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
-    console.log(`Page was successfully downloaded into ${filepath}`)
+    fsp.writeFile(join(process.cwd(), filepath, fileNameHTML), fileContent);
+    //вот здесь нужно будет создать полный путь типа '/app/page-loader/page-loader-hexlet-repl.co.html'
+    console.log(`Page was successfully downloaded into ${initialFolder}`)
   });
 }
 
