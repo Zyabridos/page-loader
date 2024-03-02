@@ -9,9 +9,9 @@ const exampleFilePath = path.resolve(process.cwd(), '__fixtures__/expected');
 const pageLoader = (site, filepath = './') => {
   const fileNameHTML = createFileName(site, '.html');
   const fileNameImage = createFileName(site, '.png');
-  const initialFolder = createFileName(site, '');
+  const domainFolder = createFileName(site, '');
   const filesFolder = createFileName(site, '_files');
-  makeDirectory(initialFolder, filesFolder);
+  makeDirectory(filepath, domainFolder, filesFolder);
   const listPromise = fetch(site)
   .then((response) => {
     return response.text();
@@ -19,10 +19,10 @@ const pageLoader = (site, filepath = './') => {
   .then((fileContent) => {
     fsp.writeFile(join(process.cwd(), filepath, fileNameHTML), fileContent);
     //вот здесь нужно будет создать полный путь типа '/app/page-loader/page-loader-hexlet-repl.co.html'
-    console.log(`Page was successfully downloaded into ${initialFolder}`)
+    console.log(`Page was successfully downloaded into ${domainFolder}`)
   });
 }
 
-pageLoader('https://ru.hexlet.io/courses', '__fixtures__');
+pageLoader('https://ru.hexlet.io/courses', 'temp');
 
 export default pageLoader;

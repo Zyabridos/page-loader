@@ -11,9 +11,9 @@ import { URL } from 'url';
 // }
 
 
-export async function makeDirectory(dirname, dirnameForFiles) {
+export async function makeDirectory(domainFolder, dirnameForFiles) {
   // const projectFolder = join(dirname, 'test', 'project');
-  const projectFolder = join(dirname, dirnameForFiles);
+  const projectFolder = join(domainFolder, dirnameForFiles);
   const dirCreation = fsp.mkdir(projectFolder, { recursive: true });
 
   return dirCreation;
