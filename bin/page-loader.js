@@ -9,10 +9,15 @@ program
   .description('Page loader utility')
   .version('0.1.0')
   .option('-o, --output [dir]', 'output dir (default: "/home/user/current-dir")')
-  .argument('<filepath>', 'path to directory, where the file will be saved')
-  .action((url, filepath) => {
-    pageLoader(url, filepath)
+  .argument('<url>')
+  .option('-o, --output [dir]', 'output dir', '/home/jess/fullstack-javascript-project-4')
+  .action(async (url) => {
+    console.log(await pageLoader(url, program.opts().output));
   });
+  
+  // .action((url, filepath) => {
+  //   pageLoader(url, filepath)
+  // });
 
   // .action((filepath1, filepath2, formatName) => {
   //   const diff = genDiff(filepath1, filepath2, formatName.format);
