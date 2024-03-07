@@ -6,6 +6,6 @@ const pageLoader = (domain, filepath = './') => {
   downloadHTML(domain);
   };
 
-pageLoader('https://ru.hexlet.io/courses');
+pageLoader('https://www.bridgeport.edu/');
 
 export default pageLoader;
