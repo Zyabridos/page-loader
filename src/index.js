@@ -1,11 +1,11 @@
-import { downloadImage } from "../utils/saveImage.js";
 import { downloadHTML } from "../utils/downloadHTML.js";
+import { downloadAllImg } from "../utils/downloadAllImg.js";
 
 const pageLoader = (domain, filepath = './') => {
-  downloadImage(domain);
   downloadHTML(domain);
+  downloadAllImg(domain);
   };
 
-pageLoader('https://www.bridgeport.edu/');
+pageLoader('https://www.w3schools.com/')
 
 export default pageLoader;

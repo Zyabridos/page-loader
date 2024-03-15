@@ -1,19 +1,18 @@
 import fsp from 'fs/promises';
 import { join } from 'path';
-import { createDirectory, createFileName } from "./url.js";
+import axios from 'axios';
+import { createDirectories, createFileName, createFolderName } from "./smallUtils.js";
 
-const domain = 'https://ru.hexlet.io/';
+const url = 'https://www.w3schools.com';
 
 export const downloadHTML = (domain, filepath = './') => {
-  const fileNameHTML = createFileName(domain, '.html');
-  const domainFolder = createFileName(domain, '');
+  const fileNameHTML = createFileName(domain) + '.html';
+  const domainFolder = createFolderName(domain);
 
-  createDirectory(domainFolder);
+  createDirectories(domainFolder);
 
-  const listPromise = fetch(domain)
-  .then((response) => {
-    return response.text();
-  })
+  axios.get(domain)
+  .then((response) => response.data)
   .then((fileContent) => {
     fsp.writeFile(join(process.cwd(), domainFolder, fileNameHTML), fileContent);
     //вот здесь нужно будет создать полный путь типа '/app/page-loader/page-loader-hexlet-repl.co.html'
@@ -21,4 +20,4 @@ export const downloadHTML = (domain, filepath = './') => {
   });
 };
 
-// downloadHTML(domain);
+downloadHTML(url);
