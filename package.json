@@ -1,0 +1,36 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "my third progect",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zyabridos/fullstack-javascript-project-4.git"
+  },
+  "author": "Nina Ziabrina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zyabridos/fullstack-javascript-project-4/issues"
+  },
+  "homepage": "https://github.com/Zyabridos/fullstack-javascript-project-4#readme",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "axios-debug-log": "^1.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "debug": "^4.3.4",
+    "express": "^4.18.3",
+    "nock": "^13.5.4",
+    "node-image-downloader": "^1.0.7",
+    "prettier": "^3.2.4",
+    "request": "^2.88.2"
+  }
+}
