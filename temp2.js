@@ -1,1 +1,0 @@
-const isAbsolute = (url) => url.startsWith('https://') ?? true
