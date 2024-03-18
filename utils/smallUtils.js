@@ -16,13 +16,6 @@ export const createFolderName = (domain) => {
   return url.hostname.split('.').join('-');
 };
 
-// export const createFileName = (domain, fileFormat = '') => {
-//   const url = new URL(domain);
-//   const hostname = url.hostname.split('.').join('-');
-//   const pathname = url.pathname.split('/').join('-').split(0, -1);
-//   return `${hostname}${pathname}${fileFormat}`
-// };
-
 export const createFileName = (fullLink) => {
   const url = new URL(fullLink);
   const folderName = url.hostname.split('.').join('-');

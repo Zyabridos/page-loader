@@ -5,7 +5,7 @@ import { isAbsolute, createFileName, createFolderName } from './smallUtils.js';
 import * as cheerio from 'cheerio';
 import axios from 'axios';
 
-// const url = 'https://ru.hexlet.io/';
+// const url = 'https://ru.hexlet.io/courses';
 
 const url = 'https://www.w3schools.com';
 

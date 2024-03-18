@@ -3,6 +3,7 @@ import { createFileName, createFolderName } from './smallUtils.js';
 import axios from 'axios';
 import { join } from "path";
 import { URL } from 'url';
+import debug from 'debug';
 
 export async function downloadFileFromFullLink(domain, filepath = createFolderName(domain)) {
   const fileNamePNG = createFileName(domain);
@@ -31,4 +32,4 @@ export async function downloadFileFromFullLink(domain, filepath = createFolderNa
 
 };
 
-downloadFileFromFullLink('https://www.w3schools.com/images/w3schools_logo_436_2.png');
+const log = debug('downloadFileFromFullLink')

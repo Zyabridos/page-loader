@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import debug from 'debug';
 import pageLoader from '../src/index.js';
 import { Command } from 'commander';
 
@@ -10,7 +11,6 @@ program
   .version('0.1.0')
   .option('-o, --output [dir]', 'output dir (default: "/home/user/current-dir")')
   .argument('<url>')
-  .option('-o, --output [dir]', 'output dir', '/home/jess/fullstack-javascript-project-4')
   .action(async (url) => {
     console.log(await pageLoader(url, program.opts().output));
   });
