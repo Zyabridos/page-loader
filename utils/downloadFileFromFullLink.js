@@ -32,4 +32,3 @@ export async function downloadFileFromFullLink(domain, filepath = createFolderNa
 
 };
 
-const log = debug('downloadFileFromFullLink')

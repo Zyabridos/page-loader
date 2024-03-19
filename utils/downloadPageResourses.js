@@ -23,9 +23,9 @@ const downloadPageResourses = (domain) => {
                 const linkSource = $(link).attr('href');
                 let absoluteURL;
                 if (isAbsolute(linkSource)) {
-                    absoluteURL = linkSource
+                    absoluteURL = linkSource;
                 } else {
-                    absoluteURL = domain + linkSource;
+                    absoluteURL = domain + linkSource
                 }
                 // вот здесь надо сделать нормально = через регулярные выражения
                 if (absoluteURL.endsWith('.css') || absoluteURL.endsWith('.png') || absoluteURL.endsWith('.js')) {
@@ -40,7 +40,6 @@ const downloadPageResourses = (domain) => {
                 // downloadFileFromFullLink(singleScriptLink);};
             });
             $("img").each((index, image) => {
-
                 const imgSource = $(image).attr('src');
                 let absoluteURL;
                 if (isAbsolute(imgSource)) {
@@ -49,15 +48,45 @@ const downloadPageResourses = (domain) => {
                     absoluteURL = domain + '/' + imgSource;
                 };
                 downloadFileFromFullLink(absoluteURL);
+                                    const replacementLink =  createFolderName(domain) + '/_files/' + createFileName(absoluteURL);
+                    console.log(replacementLink)
+                    $('img').attr('src', replacementLink);
+                    const modifiedHtml = $.html();
+                    fsp.writeFile(join(process.cwd(), domainFolder, fileNameHTML), modifiedHtml);
             });
 
-            // const replacementLink = 'AAAAAAAAAAAAAAAA';
-            // $('img').attr('src', replacementLink);
-            // const modifiedHtml = $.html();
-            // fsp.writeFile(join(process.cwd(), domainFolder, fileNameHTML), modifiedHtml);
+
+
+
+
+                        $("img").each((index, image) => {
+
+                const imgSource = $(image).attr('src');
+                let absoluteURL;
+                if (isAbsolute(imgSource)) {
+                    absoluteURL = imgSource;
+                } else {
+                    absoluteURL = domain + '/' + imgSource;
+                };
+                    // const replacementLink =  createFolderName(domain) + '/_files/' + createFileName(absoluteURL);
+                    // console.log(replacementLink)
+                    // $('img').attr('src', replacementLink);
+                    // const modifiedHtml = $.html();
+                    // fsp.writeFile(join(process.cwd(), domainFolder, fileNameHTML), modifiedHtml);
+                
+            });
+
         });
 };
 
 export default downloadPageResourses;
 
 downloadPageResourses(url);
+
+// const replaceLinks = (url) => {
+//     const $ = cheerio.load(url);
+//     const replacementLink =  createFolderName(domain) + '/_files/' + createFileName(absoluteURL);
+//     $('img').attr('src', replacementLink);
+//     const modifiedHtml = $.html();
+//     fsp.writeFile(join(process.cwd(), domainFolder, fileNameHTML), modifiedHtml);
+// }

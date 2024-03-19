@@ -4,6 +4,7 @@ import pageLoader from '../src/index.js';
 import { Command } from 'commander';
 
 const program = new Command();
+const log = debug('page-loader.js');
 
 program
   .name('page-loader')
@@ -13,8 +14,9 @@ program
   .argument('<url>')
   .action(async (url) => {
     console.log(await pageLoader(url, program.opts().output));
+    
   });
-  
+  log('aaa')
   // .action((url, filepath) => {
   //   pageLoader(url, filepath)
   // });

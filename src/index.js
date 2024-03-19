@@ -7,7 +7,7 @@ const url = 'https://ru.hexlet.io/';
 
 const pageLoader = (domain, filepath = './') => {
   downloadHTML(domain);
-  downloadPageResourses(domain);
+  // downloadPageResourses(domain);
   };
 
 pageLoader(url);
