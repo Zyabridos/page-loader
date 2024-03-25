@@ -11,19 +11,14 @@ program
   .description('Page loader utility')
   .version('0.1.0')
   .option('-o, --output [dir]', 'output dir (default: "/home/user/current-dir")')
+  .option('-d --debug', 'run this option for debugging')
   .argument('<url>')
-  .action(async (url) => {
-    console.log(await pageLoader(url, program.opts().output));
-    
+  .action((url, option) => {
+    if (option.debug) {
+      debug.enable('page-loader*,axios');
+    }
+    pageLoader(url, option.output)
+        console.log(`The page ${url} was successfully dowloaded into`);
   });
-  log('aaa')
-  // .action((url, filepath) => {
-  //   pageLoader(url, filepath)
-  // });
-
-  // .action((filepath1, filepath2, formatName) => {
-  //   const diff = genDiff(filepath1, filepath2, formatName.format);
-  //   console.log(diff);
-  // });
 
 program.parse();

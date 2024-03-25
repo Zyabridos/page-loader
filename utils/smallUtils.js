@@ -3,6 +3,9 @@ import { join } from "path";
 import { URL } from 'url';
 import axios from 'axios';
 
+
+export const isSameDomain = (url1, url2) => url1.hostname === url2.hostname;
+
 export async function createDirectories(domainFolder) {
   // const projectFolder = join(dirname, 'test', 'project');
   const projectFolder = join(domainFolder, '_files');
@@ -27,6 +30,15 @@ export const createFileName = (fullLink) => {
   return `${folderName}${fileName}`
 };
 
-export const isAbsolute = (url) => url.startsWith('https://') ?? true
+export const isAbsolute = (url) => {
+  const regex = /^.+?[a-z]{1,}:\/\//
+  return regex.test(url);
+}
 
-export const changeLinksToLocal = (absoluteURL) => createFolderName(absoluteURL) + '_files/' + createFileName(absoluteURL);
+export const changeLinksToLocal = (absoluteURL) => createFolderName(absoluteURL) + '/_files/' + createFileName(absoluteURL);
+
+const mapping = [
+  { tag: 'img', attribute: 'src' },
+  { tag: 'script', attribute: 'src' },
+  { tag: 'link', attribute: 'href' },
+];

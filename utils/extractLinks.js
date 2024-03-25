@@ -12,10 +12,9 @@ const mapping = [
 ]
 
 async function extractLinks (domain) {
+  const response = await axios.get(url);
+  const html = response.data;
   let links = [];
-  axios.get(domain)
-    .then((response) => response.data)
-    .then((html) => {
         const $ = cheerio.load(html);
         $("link").each(function () {
           let href = $(this).attr('href'); 
@@ -27,13 +26,11 @@ async function extractLinks (domain) {
             links.push(href);
           }
       });
-      // return links;
-      console.log(links)
-    });
+      return links;
 };
 
-extractLinks(url).then((links) => {
-  console.log('Extracted links:', links);
-});
+// extractLinks(url).then((links) => {
+//   console.log('Extracted links:', links);
+// });
 
 export default extractLinks;

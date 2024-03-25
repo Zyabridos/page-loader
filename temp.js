@@ -1,63 +1,44 @@
 import fsp from 'fs/promises';
-import { downloadFileFromFullLink } from './downloadFileFromFullLink.js';
-import { join } from 'path';
-import { isAbsolute, createFileName, createFolderName } from './smallUtils.js';
 import * as cheerio from 'cheerio';
+import { createFileName, createFolderName } from './smallUtils.js';
 import axios from 'axios';
-
-// const url = 'https://ru.hexlet.io/';
+import { join } from "path";
+import { URL } from 'url';
 
 const url = 'https://www.w3schools.com';
 
-const downloadPageResourses = (domain) => {
-    const fileNameHTML = createFileName(domain) + '.html';
-    const domainFolder = createFolderName(domain);
+// Function to extract all links from a webpage using Cheerio
+const extractLinks = async (url) => {
+  try {
+    // Fetch the content of the webpage
+    const response = await axios.get(url);
+    const data = response.data;
 
-    const regexpForFiles = new RegExp(".[a-z]{1,3}$", "g");
+    // Load the webpage content into Cheerio
+    const $ = cheerio.load(data);
 
-    axios.get(domain)
-        .then((response) => response.data)
-        .then((html) => {
-            const $ = cheerio.load(html);
-            $("link").each((index, link) => {
-                const linkSource = $(link).attr('href');
-                let absoluteURL;
-                if (isAbsolute(linkSource)) {
-                    absoluteURL = linkSource
-                } else {
-                    absoluteURL = domain + linkSource;
-                }
-                // вот здесь надо сделать нормально = через регулярные выражения
-                if (absoluteURL.endsWith('.css') || absoluteURL.endsWith('.png') || absoluteURL.endsWith('.js')) {
-                    downloadFileFromFullLink(absoluteURL);
-                }
-            });
+    // Initialize an array to store the links
+    const links = [];
 
+    // Select all anchor tags and extract href attributes
+    $('a').each((index, element) => {
+      const link = $(element).attr('href');
+      // Make sure the href attribute exists and is not empty
+      if (link && link.trim() !== '') {
+        links.push(link);
+      }
+    });
 
-            $("script").each((index, script) => {
-                const singleScriptLink = $(script).attr('src');
-                // if (!singleScriptLink) {
-                // downloadFileFromFullLink(singleScriptLink);};
-            });
-            $("img").each((index, image) => {
-
-                const imgSource = $(image).attr('src');
-                let absoluteURL;
-                if (isAbsolute(imgSource)) {
-                    absoluteURL = imgSource;
-                } else {
-                    absoluteURL = domain + '/' + imgSource;
-                };
-                downloadFileFromFullLink(absoluteURL);
-            });
-
-            // const replacementLink = 'AAAAAAAAAAAAAAAA';
-            // $('img').attr('src', replacementLink);
-            // const modifiedHtml = $.html();
-            // fsp.writeFile(join(process.cwd(), domainFolder, fileNameHTML), modifiedHtml);
-        });
+    // Return the array of links
+    return links;
+  } catch (error) {
+    console.error('Error fetching or parsing the webpage:', error);
+    return [];
+  }
 };
 
-export default downloadPageResourses;
+// Example usage
 
-downloadPageResourses(url);
+extractLinks(url).then((links) => {
+  console.log('Extracted links:', links);
+});
