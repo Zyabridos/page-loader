@@ -1,36 +1,31 @@
-import { isAbsolute } from './smallUtils.js';
+import { isAbsolute, mappingTagsAndAttrbs } from './smallUtils.js';
 import * as cheerio from 'cheerio';
 import axios from 'axios';
 
-const url = 'https://www.w3schools.com';
+// const url = 'https://www.w3schools.com';
 // const url = 'https://ru.hexlet.io/courses';
 
-const mapping = [
-  { tag: 'src', attribute: 'href' },
-  { tag: 'script', attribute: 'href' },
-  { tag: 'img', attribute: 'src' },
-]
-
-async function extractLinks (domain) {
-  const response = await axios.get(url);
+export async function extractLinks (domain) {
+  const regex = /\.js|.css|.png|.jpg/g
+  const response = await axios.get(domain);
   const html = response.data;
   let links = [];
-        const $ = cheerio.load(html);
-        $("link").each(function () {
-          let href = $(this).attr('href'); 
-          if (href && isAbsolute(href)) {
-            links.push(href);
-          }
-          else if (href && !isAbsolute(href)) {
-            href = `${domain}${href}`
-            links.push(href);
-          }
-      });
-      return links;
+    const $ = cheerio.load(html);
+      mappingTagsAndAttrbs.map((current) => {
+      const { tag, attr } = current;
+      $(tag).each(function () {
+      let href = $(this).attr(attr);
+      if (href && isAbsolute(href) && regex.test(href)) {
+        links.push(href);
+      }
+      else if (href && !isAbsolute(href) && regex.test(href)) {
+        href = `${domain}${href}`
+        links.push(href);
+      }
+      })
+    });
+  return links
 };
 
-// extractLinks(url).then((links) => {
-//   console.log('Extracted links:', links);
-// });
-
-export default extractLinks;
+// extractLinks(url)
+// .then((links) => links.map((link) => changeLinksToLocal(link)))

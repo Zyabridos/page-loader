@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 import debug from 'debug';
-import pageLoader from '../src/index.js';
 import { Command } from 'commander';
+import pageLoader from '../src/index.js';
 
 const program = new Command();
-const log = debug('page-loader.js');
 
 program
   .name('page-loader')
@@ -19,6 +18,8 @@ program
     }
     pageLoader(url, option.output)
         console.log(`The page ${url} was successfully dowloaded into`);
-  });
+});
 
 program.parse();
+
+// node bin/page-loader.js https://ru.hexlet.io/courses

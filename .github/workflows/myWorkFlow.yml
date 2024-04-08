@@ -1,0 +1,11 @@
+name: myWorkflow
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install reprository and check it
+        uses: actions/checkout@v4      
+      - run: make install-deps
+      - run: make test
+      - run: make lint

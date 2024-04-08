@@ -1,13 +1,23 @@
 import fsp from 'fs/promises';
-import { join } from "path";
+import { join } from 'path';
 import { URL } from 'url';
-import axios from 'axios';
 
+const url = 'https://ru.hexlet.io/courses';
+const url2 = 'https://www.w3schools.com';
 
-export const isSameDomain = (url1, url2) => url1.hostname === url2.hostname;
+export const mappingTagsAndAttrbs = [
+  { tag: 'img', attr: 'src' },
+  { tag: 'link', attr: 'href' },
+  { tag: 'a', attr: 'href' }
+]
+
+export const isSameDomain = (link1, link2) => {
+  const url1 = new URL(link1);
+  const url2 = new URL(link2);
+  return url1.hostname === url2.hostname;
+};
 
 export async function createDirectories(domainFolder) {
-  // const projectFolder = join(dirname, 'test', 'project');
   const projectFolder = join(domainFolder, '_files');
   const dirCreation = fsp.mkdir(projectFolder, { recursive: true });
 
@@ -16,29 +26,24 @@ export async function createDirectories(domainFolder) {
 
 export const createFolderName = (domain) => {
   const url = new URL(domain);
-  return url.hostname.split('.').join('-');
+  return url.hostname.split('.').join('-') + url.pathname.split('/').join('-');
 };
 
-export const createFileName = (fullLink) => {
-  const url = new URL(fullLink);
-  const folderName = url.hostname.split('.').join('-');
-  let pathname = url.pathname;
-  if (pathname.startsWith('//')) {
-    pathname = pathname.slice(1, )
+export const createFileName = (link) => {
+  const url = new URL(link);
+  if (url.pathname.startsWith('//') || url.pathname.startsWith('/')) {
+    url.pathname = url.pathname.slice(1, );
   }
-  const fileName = pathname.split('/').join('-');
-  return `${folderName}${fileName}`
+  return url.hostname.split('.').join('-') + url.pathname.split('/').join('-');
 };
 
 export const isAbsolute = (url) => {
-  const regex = /^.+?[a-z]{1,}:\/\//
+  const regex = /^.+?[a-z]{1,}:\/\//;
   return regex.test(url);
-}
+};
 
-export const changeLinksToLocal = (absoluteURL) => createFolderName(absoluteURL) + '/_files/' + createFileName(absoluteURL);
+export const changeLinksToLocal = (absoluteURL) => createFileName(absoluteURL) + '/_files/' + createFolderName(absoluteURL);
 
-const mapping = [
-  { tag: 'img', attribute: 'src' },
-  { tag: 'script', attribute: 'src' },
-  { tag: 'link', attribute: 'href' },
-];
+export const writeFile = (fileName, fileContent, filepath = './') => fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
+
+export const makeAbsolute = (domain, link) => domain + link;

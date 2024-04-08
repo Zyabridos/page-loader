@@ -1,34 +1,17 @@
 import fsp from 'fs/promises';
-import { createFileName, createFolderName } from './smallUtils.js';
+import { createFileName, createFolderName, writeFile } from './smallUtils.js';
 import axios from 'axios';
 import { join } from "path";
-import { URL } from 'url';
-import debug from 'debug';
 
-export async function downloadFileFromFullLink(domain, filepath = createFolderName(domain)) {
-  const fileNamePNG = createFileName(domain);
-  
-  const url = new URL(domain);
-  const hostname = url.hostname.split(`${url.pathname}`);
+export async function downloadFileFromFullLink(fullLink, filepath = './') {
+  const fileName = createFileName(fullLink);
+  const folderName = createFolderName(fullLink);
+  const filesFolder = join(folderName, '_files');
+  // fsp.mkdir(filesFolder, { recursive: true });
+  fsp.mkdir(filepath, { recursive: true });
 
-  const domainFolderName = hostname[0].split('.').join('-');
-
-  const projectFolder = join(domainFolderName, '_files');
-  const dirCreation = fsp.mkdir(projectFolder, { recursive: true });
-
-  const response = await axios.get(domain, { responseType: 'arraybuffer' });
-  fsp.writeFile(join(process.cwd(), `./${domainFolderName}/_files`, fileNamePNG), response.data);
-
-  // если я пишу вот так, то картинка скачивается, но не открывается = 'It may be damaged or use a file format that Preview doesn’t recognise.'
-  // Как исправить, ибо надо ведь весь проект писать на промисах?
-
-
-  // axios.get(domain)
-  // .then((response) => response.data)
-  // .then((fullLink) => {
-  //   fsp.writeFile(join(process.cwd(), `./${domainFolderName}/_files`, fileNamePNG), fullLink);
-  // });
-
-
+  const response = await axios.get(fullLink, { responseType: 'arraybuffer' });
+  writeFile(filepath, fileName, response.data);
 };
 
+// downloadFileFromFullLink('https://cdn2.hexlet.io/assets/selectize/selectize-92d62aa4279838818baaaac80c4290e0c76d96eeda76bddc0ec3d99fe84d0500.css')
