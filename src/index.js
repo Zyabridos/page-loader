@@ -1,10 +1,15 @@
 import axios from 'axios';
 import debug from 'debug';
-import { writeFile, createDirectories, createFileName, createFolderName } from "../utils/smallUtils.js";
+import {
+  writeFile,
+  createDirectories,
+  createFileName,
+  createFolderName,
+} from '../utils/smallUtils.js';
 import { extractLinks } from '../utils/extractLinks.js';
 import path from 'path';
-import { downloadFileFromFullLink } from "../utils/downloadSingleLink.js";
-import { renameLinks } from "../utils/renameLinks.js";
+import { downloadFileFromFullLink } from '../utils/downloadSingleLink.js';
+import { renameLinks } from '../utils/renameLinks.js';
 
 const log = debug('page-loader.js');
 
@@ -19,22 +24,23 @@ const pageLoader = (domain, filepath = './') => {
   log(`Creating directory. Directory name: ${folderName}`);
   createDirectories(folderName);
 
-  axios.get(domain)
-  .then((response) => response.data)
-  .then((fileContent) => {
-    log(`Downloading an html named ${fileName} into folder ${folderName}`)
-    writeFile(folderName, fileName, fileContent);
-  })
+  axios
+    .get(domain)
+    .then((response) => response.data)
+    .then((fileContent) => {
+      log(`Downloading an html named ${fileName} into folder ${folderName}`);
+      writeFile(fileName, fileContent, folderName);
+    });
   links
-  // как предпочтительнее писать - так писать, или через отдельную функцию downloadAllLinks
+    // как предпочтительнее писать - так писать, или через отдельную функцию downloadAllLinks
     .then((links) => {
       links.map((currentLink) => {
         const filesDestination = path.join('./', folderName, '_files');
-        log(`Downloading the file ${currentLink} into folder ${filesDestination}`)
-          downloadFileFromFullLink(currentLink, filesDestination);
-        });
+        log(`Downloading the file ${currentLink} into folder ${filesDestination}`);
+        downloadFileFromFullLink(currentLink, filesDestination);
       });
-  };
+    });
+};
 
-// pageLoader(url);
+pageLoader(url);
 export default pageLoader;

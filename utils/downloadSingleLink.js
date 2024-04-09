@@ -1,7 +1,7 @@
 import fsp from 'fs/promises';
 import { createFileName, createFolderName, writeFile } from './smallUtils.js';
 import axios from 'axios';
-import { join } from "path";
+import { join } from 'path';
 
 export async function downloadFileFromFullLink(fullLink, filepath = './') {
   const fileName = createFileName(fullLink);
@@ -11,7 +11,10 @@ export async function downloadFileFromFullLink(fullLink, filepath = './') {
   fsp.mkdir(filepath, { recursive: true });
 
   const response = await axios.get(fullLink, { responseType: 'arraybuffer' });
-  writeFile(filepath, fileName, response.data);
-};
+  // writeFile(filepath, fileName, response.data);
+  writeFile(fileName, response.data, filepath);
+}
 
-// downloadFileFromFullLink('https://cdn2.hexlet.io/assets/selectize/selectize-92d62aa4279838818baaaac80c4290e0c76d96eeda76bddc0ec3d99fe84d0500.css')
+// downloadFileFromFullLink(
+//   'https://cdn2.hexlet.io/assets/selectize/selectize-92d62aa4279838818baaaac80c4290e0c76d96eeda76bddc0ec3d99fe84d0500.css',
+// );

@@ -8,8 +8,8 @@ const url2 = 'https://www.w3schools.com';
 export const mappingTagsAndAttrbs = [
   { tag: 'img', attr: 'src' },
   { tag: 'link', attr: 'href' },
-  { tag: 'a', attr: 'href' }
-]
+  { tag: 'a', attr: 'href' },
+];
 
 export const isSameDomain = (link1, link2) => {
   const url1 = new URL(link1);
@@ -32,7 +32,7 @@ export const createFolderName = (domain) => {
 export const createFileName = (link) => {
   const url = new URL(link);
   if (url.pathname.startsWith('//') || url.pathname.startsWith('/')) {
-    url.pathname = url.pathname.slice(1, );
+    url.pathname = url.pathname.slice(1);
   }
   return url.hostname.split('.').join('-') + url.pathname.split('/').join('-');
 };
@@ -42,8 +42,10 @@ export const isAbsolute = (url) => {
   return regex.test(url);
 };
 
-export const changeLinksToLocal = (absoluteURL) => createFileName(absoluteURL) + '/_files/' + createFolderName(absoluteURL);
+export const changeLinksToLocal = (absoluteURL) =>
+  createFileName(absoluteURL) + '/_files/' + createFolderName(absoluteURL);
 
-export const writeFile = (fileName, fileContent, filepath = './') => fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
+export const writeFile = (fileName, fileContent, filepath = './') =>
+  fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
 
 export const makeAbsolute = (domain, link) => domain + link;

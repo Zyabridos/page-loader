@@ -16,9 +16,9 @@ program
     if (option.debug) {
       debug.enable('page-loader*,axios');
     }
-    pageLoader(url, option.output)
-        console.log(`The page ${url} was successfully dowloaded into`);
-});
+    pageLoader(url, option.output);
+    console.log(`The page ${url} was successfully dowloaded into !!! - need to fix that`);
+  });
 
 program.parse();
 
