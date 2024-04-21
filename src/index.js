@@ -21,16 +21,19 @@ const pageLoader = (domain, filepath = './') => {
   const folderName = createFolderName(domain);
   const links = extractLinks(domain);
 
+
   log(`Creating directory. Directory name: ${folderName}`);
   createDirectories(folderName);
 
-  axios
+  return Promise.all(
+    [axios
     .get(domain)
     .then((response) => response.data)
     .then((fileContent) => {
       log(`Downloading an html named ${fileName} into folder ${folderName}`);
       writeFile(fileName, fileContent, folderName);
-    });
+    })])
+    .then(
   links
     // как предпочтительнее писать - так писать, или через отдельную функцию downloadAllLinks
     .then((links) => {
@@ -39,8 +42,10 @@ const pageLoader = (domain, filepath = './') => {
         log(`Downloading the file ${currentLink} into folder ${filesDestination}`);
         downloadFileFromFullLink(currentLink, filesDestination);
       });
-    });
+    })
+    )
+    // возвращает href="[object Promise]", хотя ссылки меняются коректно в функции. Как переделать, чтобы нормально было?
+    .then(renameLinks(domain))
 };
 
-pageLoader(url);
 export default pageLoader;

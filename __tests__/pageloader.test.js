@@ -1,9 +1,7 @@
 import os from 'os';
 import path, { dirname } from 'path';
 import nock from 'nock';
-import debug from 'debug';
 import fsp from 'fs/promises';
-import * as fs from 'fs';
 import { fileURLToPath } from 'url';
 import pageLoader from '../src/index.js';
 import { expected, response } from '../__fixtures__/hexlet_html.js';

@@ -16,8 +16,12 @@ program
     if (option.debug) {
       debug.enable('page-loader*,axios');
     }
-    pageLoader(url, option.output);
-    console.log(`The page ${url} was successfully dowloaded into !!! - need to fix that`);
+    pageLoader(url, option.output)
+    .then(() => console.log(`The page ${url} was successfully dowloaded into !!! - need to fix that`))
+    .catch((error) => {
+      console.error(error.message);
+      process.exit(1);
+    })
   });
 
 program.parse();
