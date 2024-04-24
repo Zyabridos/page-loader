@@ -19,7 +19,7 @@ program
     pageLoader(url, option.output)
     .then(() => console.log(`The page ${url} was successfully dowloaded into !!! - need to fix that`))
     .catch((error) => {
-      console.error(error.message);
+      console.error(error.message)
       process.exit(1);
     })
   });

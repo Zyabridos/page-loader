@@ -17,16 +17,9 @@ export const isSameDomain = (link1, link2) => {
   return url1.hostname === url2.hostname;
 };
 
-export async function createDirectories(domainFolder) {
-  const projectFolder = join(domainFolder, '_files');
-  const dirCreation = fsp.mkdir(projectFolder, { recursive: true });
-
-  return dirCreation;
-}
-
 export const createFolderName = (domain) => {
   const url = new URL(domain);
-  return url.hostname.split('.').join('-') + url.pathname.split('/').join('-');
+  return url.hostname.split('.').join('-');
 };
 
 export const createFileName = (link) => {
@@ -43,9 +36,15 @@ export const isAbsolute = (url) => {
 };
 
 export const changeLinksToLocal = (absoluteURL) =>
-  createFileName(absoluteURL) + '/_files/' + createFolderName(absoluteURL);
+  createFolderName(absoluteURL) + '/_files/' + createFileName(absoluteURL);
 
 export const writeFile = (fileName, fileContent, filepath = './') =>
   fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
 
 export const makeAbsolute = (domain, link) => domain + link;
+
+// console.log(changeLinksToLocal('https://www.w3schools.com/images/colorpicker2000.png'))
+
+// console.log(createFolderName('https://www.w3schools.com/images/colorpicker2000.png'))
+
+// console.log(createFileName('https://www.w3schools.com/images/colorpicker2000.png'))
