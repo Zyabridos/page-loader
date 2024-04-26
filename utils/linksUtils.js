@@ -14,22 +14,26 @@ import {
 const url = 'https://www.w3schools.com';
 // const url = 'https://ru.hexlet.io/courses';
 
-export const downloadResource = (fullLink, dirname) => {
+export function downloadResource (fullLink, dirname) {
   const fileName = createFileName(fullLink);
-  writeFile(fileName, fullLink, dirname);
+  axios.get(fullLink, { responseType: 'arraybuffer' })
+  .then((response) => {
+    writeFile(fileName, response.data, dirname);
+  });
 }
 
 export const replaceLinks = ($, replacementLinks, domain) => {
   const links = extractLinks($, domain);
   const renamedLinks = []
   links.forEach((current) => renamedLinks.push(changeLinksToLocal(current)));
-mappingTagsAndAttrbs.map((current) => {
-  const { tag, attr } = current;
-  $(tag).each(function (i) {
-    const newSrc = replacementLinks[i];
-    $(this).attr(attr, newSrc);
-  });
-})
+  mappingTagsAndAttrbs.map((current) => {
+    const { tag, attr } = current;
+    $(tag).each(function (i) {
+      const newSrc = replacementLinks[i];
+      $(this).attr(attr, newSrc);
+    });
+  })
+  // console.log($.html())
   return $.html();
 }
 
@@ -40,14 +44,18 @@ export const extractLinks = ($, domain) => {
     const { tag, attr } = current;
     $(tag).each(function () {
       let href = $(this).attr(attr);
+// if(href.endsWith('png')) {
         if (href && isAbsolute(href) && regex.test(href)) {
           links.push(href);
         } else if (href && !isAbsolute(href) && regex.test(href)) {
-          href = `${domain}${href}`;
+          href = `${domain}/${href}`;
           links.push(href);
         }
+// }
       }
     );
   });
   return links;
 };
+
+downloadResource('https://cdn2.hexlet.io/assets/professions/program-f26fba51e364abcd7f15475edb68d93958426d54c75468dc5bc65e493a586226.png', './');

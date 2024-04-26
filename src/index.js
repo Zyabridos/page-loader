@@ -37,11 +37,10 @@ async function pageLoader (domain, filepath = './')  {
 
   return axios
     .get(domain)
-    .then((response) => response.data)
-    .then((fileContent) => {
+    .then((response) => {
       log(`Downloading an html named ${htmlFileName} into folder ${folderName}`);
-      writeFile(htmlFileName, fileContent, folderName);
-      writeFile(htmlFileName, newHTML, folderName)
+      writeFile(htmlFileName, response.data, folderName);
+      writeFile(htmlFileName, newHTML, folderName);
     })
 };
 
