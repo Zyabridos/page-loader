@@ -12,17 +12,20 @@ program
   .option('-o, --output [dir]', 'output dir (default: "/home/user/current-dir")')
   .option('-d --debug', 'run this option for debugging')
   .argument('<url>')
+
   .action((url, option) => {
-    if (option.debug) {
-      debug.enable('page-loader*,axios');
-    }
-    pageLoader(url, option.output)
-    .then(() => console.log(`The page ${url} was successfully dowloaded into !!! - need to fix that`))
-    .catch((error) => {
-      console.error(error.message)
-      process.exit(1);
-    })
-  });
+  if (option.debug) {
+    debug.enable('page-loader*,axios');
+  }
+  return pageLoader(url, option.output)
+  .then((filepath) => {
+    console.log(`The page ${url} was successfully dowloaded into ${option.output}`
+    )})
+  .catch((error) => {
+    console.error(error.message)
+    process.exit(1);
+  })
+});
 
 program.parse();
 

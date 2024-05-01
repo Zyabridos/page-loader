@@ -38,13 +38,9 @@ export const isAbsolute = (url) => {
 export const changeLinksToLocal = (absoluteURL) =>
   createFolderName(absoluteURL) + '/_files/' + createFileName(absoluteURL);
 
-export const writeFile = (fileName, fileContent, filepath = './') =>
+export const writeFile = (fileName, fileContent, filepath = process.cwd()) =>
   fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
 
+export const mkdir = (filepath = process.cwd()) => fsp.mkdir(path.join(filepath, '_files'), { recursive: true});
+
 export const makeAbsolute = (domain, link) => domain + link;
-
-// console.log(changeLinksToLocal('https://www.w3schools.com/images/colorpicker2000.png'))
-
-// console.log(createFolderName('https://www.w3schools.com/images/colorpicker2000.png'))
-
-// console.log(createFileName('https://www.w3schools.com/images/colorpicker2000.png'))

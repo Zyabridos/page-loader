@@ -9,42 +9,50 @@ import {
   changeLinksToLocal,
 } from '../utils/smallUtils.js';
 import path from 'path';
-import { downloadResource, extractLinks, replaceLinks } from '../utils/linksUtils.js';
+import { downloadResources, extractLinks, replaceLinks } from '../utils/linksUtils.js';
+import { error } from 'console';
+import Listr from 'listr';
 
 const log = debug('page-loader.js');
 
 // const url = 'https://www.w3schools.com';
 const url = 'https://ru.hexlet.io/courses';
 
-async function pageLoader (domain, filepath = './')  {
+async function pageLoader (domain, filepath)  {
   const htmlFileName = createFileName(domain) + '.html';
   const folderName = createFolderName(domain);
-  const filesDestination = path.join('./', folderName, '_files');
-  fsp.mkdir(path.join(filepath, folderName, '_files'), { recursive: true});
 
-  const response = await axios.get(domain);
-  const html = response.data;
-  const $ = cheerio.load(html);
-  const links = extractLinks($, domain);
-  const replacementLinks = [];
-  links.forEach((current) => replacementLinks.push(changeLinksToLocal(current)));
-  const newHTML = replaceLinks($, replacementLinks, domain);
-
-  links.map((current) => {
-    log(`Downloading a resource from ${current} into ${filesDestination}`);
-        downloadResource(current, filesDestination);
-  })
+  const filesDestination = path.join(filepath, '_files');
+  fsp.mkdir(filesDestination, { recursive: true});
 
   return axios
     .get(domain)
     .then((response) => {
-      log(`Downloading an html named ${htmlFileName} into folder ${folderName}`);
-      writeFile(htmlFileName, response.data, folderName);
-      writeFile(htmlFileName, newHTML, folderName);
+
+      const html = response.data;
+      const $ = cheerio.load(html);
+      const links = extractLinks($, domain);
+      const replacementLinks = [];
+      links.forEach((current) => replacementLinks.push(changeLinksToLocal(current)));
+      const listerTasks = links.map(({ task, link }) => ({
+        title: `downloading the file from ${link} and saving in the ${filesDestination}`,
+        task: () => task,
+      }), { recursive: true, exitOnError: false});
+      const newHTML = replaceLinks($, replacementLinks, domain);
+
+      log(`Downloading an html named ${htmlFileName} into folder ${filepath}`);
+      downloadResources(links, filesDestination)
+      .then(() => writeFile(htmlFileName, newHTML, path.join(filepath)))
+      new Listr(listerTasks).run().catch(() => {})
     })
+    .catch(error)
 };
 
 
-pageLoader(url)
+pageLoader(url, 'mydir')
 
 export default pageLoader;
+
+// node bin/page-loader.js -o mydir https://ru.hexlet.io/courses
+
+// node bin/page-loader.js --debug -o mydir https://ru.hexlet.io/courses
