@@ -18,28 +18,38 @@ const log = debug('page-loader.js');
 // const url = 'https://www.w3schools.com';
 const url = 'https://ru.hexlet.io/courses';
 
-async function pageLoader (domain, filepath)  {
+async function pageLoader (domain, filepath = process.cwd())  {
   const htmlFileName = createFileName(domain) + '.html';
   const folderName = createFolderName(domain);
+  let html;
 
   const filesDestination = path.join(filepath, '_files');
 
-  return Promise.all([
-    axios.get(domain),
+    // return axios
+    // .get(domain),
+    // fsp.mkdir(filesDestination, { recursive: true})
+    // .then((response) => {
+
+  // return axios.get(resource)
+  //   .then((r) => {
+  //     log(`Start loading ${resource}`);
+  //     rawHtml = r.data;
+  //   })
+  return axios
+    .get(domain),
       fsp.mkdir(filesDestination, { recursive: true})
       .then(() => {
         log(`directory for the page assets has been created at the ${filesDestination}`);
       })
-      .catch(error),
-  ])
-    .then(([response]) => {
+      .catch(error)
+    .then((response) => {
+      // log(`${response}`);
       const html = response.data;
       const $ = cheerio.load(html);
       const links = extractLinks($, domain);
       const replacementLinks = [];
       links.forEach((current) => replacementLinks.push(changeLinksToLocal(current)));
       const newHTML = replaceLinks($, replacementLinks, domain);
-
       const listerTasks = links.map(({ task, link }) => ({
         title: `downloading the file from ${link} and saving in the ${filesDestination}`,
         task: () => task,
@@ -58,10 +68,20 @@ async function pageLoader (domain, filepath)  {
 
 
 
-pageLoader(url, 'mydir')
+pageLoader(url)
 
 export default pageLoader;
 
 // node bin/page-loader.js -o mydir https://ru.hexlet.io/courses
 
-// node bin/page-loader.js --debug -o mydir https://ru.hexlet.io/courses
+// node bin/page-loader.js --debug https://ru.hexlet.io/courses
+
+  // return axios
+  //   .get(domain),
+  //     fsp.mkdir(filesDestination, { recursive: true})
+  //     .then(() => {
+  //       log(`directory for the page assets has been created at the ${filesDestination}`);
+  //     })
+  //     .catch(error)
+  //   .then((response) => {
+    

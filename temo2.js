@@ -39,12 +39,10 @@ async function pageLoader (domain, filepath)  {
       const replacementLinks = [];
       links.forEach((current) => replacementLinks.push(changeLinksToLocal(current)));
       const newHTML = replaceLinks($, replacementLinks, domain);
-
       const listerTasks = links.map(({ task, link }) => ({
         title: `downloading the file from ${link} and saving in the ${filesDestination}`,
         task: () => task,
       }), { recursive: true, exitOnError: false});
-      
         return Promise.all([
           writeFile(htmlFileName, newHTML, path.join(filepath)),
           downloadResources(links, filesDestination) 

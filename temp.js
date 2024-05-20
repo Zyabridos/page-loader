@@ -23,42 +23,34 @@ async function pageLoader (domain, filepath)  {
   const folderName = createFolderName(domain);
 
   const filesDestination = path.join(filepath, '_files');
+  // fsp.mkdir(filesDestination, { recursive: true});
 
-  return Promise.all([
-    axios.get(domain),
-      fsp.mkdir(filesDestination, { recursive: true})
-      .then(() => {
-        log(`directory for the page assets has been created at the ${filesDestination}`);
-      })
-      .catch(error),
-  ])
-    .then(([response]) => {
+  return axios
+    .get(domain),
+    fsp.mkdir(filesDestination, { recursive: true})
+    .then((response) => {
+
       const html = response.data;
       const $ = cheerio.load(html);
       const links = extractLinks($, domain);
       const replacementLinks = [];
       links.forEach((current) => replacementLinks.push(changeLinksToLocal(current)));
-      const newHTML = replaceLinks($, replacementLinks, domain);
-
       const listerTasks = links.map(({ task, link }) => ({
         title: `downloading the file from ${link} and saving in the ${filesDestination}`,
         task: () => task,
       }), { recursive: true, exitOnError: false});
-      
-        return Promise.all([
-          writeFile(htmlFileName, newHTML, path.join(filepath)),
-          downloadResources(links, filesDestination) 
-            .then(() => writeFile(htmlFileName, newHTML, path.join(filepath)))
-            .catch(error),
-          new Listr(listerTasks).run().catch(() => {}),
-        ]);
-      })
-      .then(() => path.join(filepath, htmlFileName));
+      const newHTML = replaceLinks($, replacementLinks, domain);
+
+      log(`Downloading an html named ${htmlFileName} into folder ${filepath}`);
+      downloadResources(links, filesDestination)
+      .then(() => writeFile(htmlFileName, newHTML, path.join(filepath)))
+      new Listr(listerTasks).run().catch(() => {})
+    })
+    .catch(error)
 };
 
 
-
-pageLoader(url, 'mydir')
+// pageLoader(url, 'mydir')
 
 export default pageLoader;
 
