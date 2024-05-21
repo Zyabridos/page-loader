@@ -42,17 +42,14 @@ export const extractLinks = ($, domain) => {
     const { tag, attr } = current;
     $(tag).each(function () {
       let href = $(this).attr(attr);
-// if(href.endsWith('png')) {
         if (href && isAbsolute(href) && regex.test(href)) {
           links.push(href);
         } else if (href && !isAbsolute(href) && regex.test(href)) {
           href = `${domain}/${href}`;
           links.push(href);
         }
-// }
       }
     );
   });
   return links;
 };
-

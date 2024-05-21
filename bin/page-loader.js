@@ -18,9 +18,10 @@ program
     debug.enable('page-loader*,axios');
   }
   return pageLoader(url, option.output)
-  // .then((filepath) => {
-  //   console.log(`The page ${url} was successfully dowloaded into ${option.output}`
-  //   )})
+  .then((filepath) => {
+    // filepath === undefined ?
+    console.log(`The page ${url} was successfully dowloaded into ${filepath}`
+    )})
   .catch((error) => {
     console.error(error.message)
     process.exit(1);

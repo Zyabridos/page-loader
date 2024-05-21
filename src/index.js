@@ -16,19 +16,21 @@ import Listr from 'listr';
 const log = debug('page-loader.js');
 
 // const url = 'https://www.w3schools.com';
-const url = 'https://ru.hexlet.io/courses';
+// const url = 'https://meduza.io/';
+// const url = 'https://www.vg.no/';
+// const url = 'https://ru.hexlet.io/courses';
 
-async function pageLoader (domain, filepath)  {
+function pageLoader (domain, filepath = process.cwd())  {
   const htmlFileName = createFileName(domain) + '.html';
   const folderName = createFolderName(domain);
 
-  const filesDestination = path.join(filepath, '_files');
+  const filesDestination = path.join(folderName, '_files');
 
   return Promise.all([
     axios.get(domain),
       fsp.mkdir(filesDestination, { recursive: true})
       .then(() => {
-        log(`directory for the page assets has been created at the ${filesDestination}`);
+        log(`directory for the html files is ${filesDestination}`);
       })
       .catch(error),
   ])
@@ -41,27 +43,26 @@ async function pageLoader (domain, filepath)  {
       const newHTML = replaceLinks($, replacementLinks, domain);
 
       const listerTasks = links.map(({ task, link }) => ({
-        title: `downloading the file from ${link} and saving in the ${filesDestination}`,
+
+        // downloading the file from function link() { [native code] } and saving into
+        // /Users/nina/Documents/Reprositories/Hexlet Projects/page-loader-/page-loader/ru-hexlet-io/_files
+
+        title: `downloading the file from ${link} and saving into ${path.join(filepath, filesDestination)}`,
         task: () => task,
       }), { recursive: true, exitOnError: false});
       
         return Promise.all([
-          writeFile(htmlFileName, newHTML, path.join(filepath)),
           downloadResources(links, filesDestination) 
-            .then(() => writeFile(htmlFileName, newHTML, path.join(filepath)))
+            .then(() => writeFile(htmlFileName, newHTML, path.join(folderName)))
             .catch(error),
-          new Listr(listerTasks).run().catch(() => {}),
+          new Listr(listerTasks).run().catch(() => {})
         ]);
       })
-      .then(() => path.join(filepath, htmlFileName));
+      .then(() => log('the end'))
 };
-
-
-
-pageLoader(url, 'mydir')
 
 export default pageLoader;
 
-// node bin/page-loader.js -o mydir https://ru.hexlet.io/courses
-
 // node bin/page-loader.js --debug -o mydir https://ru.hexlet.io/courses
+
+// node bin/page-loader.js --debug https://ru.hexlet.io/courses

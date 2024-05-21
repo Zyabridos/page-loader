@@ -2,9 +2,6 @@ import fsp from 'fs/promises';
 import { join } from 'path';
 import { URL } from 'url';
 
-const url = 'https://ru.hexlet.io/courses';
-const url2 = 'https://www.w3schools.com';
-
 export const mappingTagsAndAttrbs = [
   { tag: 'img', attr: 'src' },
   { tag: 'link', attr: 'href' },
@@ -40,7 +37,5 @@ export const changeLinksToLocal = (absoluteURL) =>
 
 export const writeFile = (fileName, fileContent, filepath = process.cwd()) =>
   fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
-
-export const mkdir = (filepath = process.cwd()) => fsp.mkdir(path.join(filepath, '_files'), { recursive: true});
 
 export const makeAbsolute = (domain, link) => domain + link;
