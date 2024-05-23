@@ -15,15 +15,13 @@ import {
 
 const log = debug('page-loader.js');
 
-// const url = 'https://www.w3schools.com';
-// const url = 'https://meduza.io/';
-// const url = 'https://www.vg.no/';
-const url = 'https://ru.hexlet.io/courses';
-
-function pageLoader(domain, filepath = process.cwd()) {
+const pageLoader = (domain, filepath = process.cwd()) => {
+  log(`input data is domain: ${domain}, filepath: ${domain}`);
   const htmlFileName = `${createFileName(domain)}.html`;
-  const folderName = path.join(filepath, createFolderName(domain));
-  // const folderName = createFolderName(domain);
+  let folderName = path.join(filepath, createFolderName(domain));
+  if (filepath === process.cwd()) {
+    folderName = createFolderName(domain);
+  }
 
   const filesDestination = path.join(folderName, '_files');
 
@@ -58,12 +56,19 @@ function pageLoader(domain, filepath = process.cwd()) {
       ]);
     })
     .then(() => path.join(filepath, htmlFileName));
-}
+};
 
 export default pageLoader;
 
 // pageLoader(url, 'mydir');
 
-// // node bin/page-loader.js --debug -o mydir https://ru.hexlet.io/courses
+// asciinema rec
+// node ../bin/page-loader.js -h
+// tree
+// node ../bin/page-loader.js --option --debug new\ directory https://ru.hexlet.io/courses
+// tree
+// exit
 
-// node bin/page-loader.js --debug https://ru.hexlet.io/courses
+// node ../bin/page-loader.js --option --debug new\ directory https://ru.hexlet.io/courses
+
+// node ../bin/page-loader.js --debug https://ru.hexlet.io/courses

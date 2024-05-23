@@ -7,10 +7,10 @@ const program = new Command();
 
 program
   .name('page-loader')
-  .description('Page loader utility')
+  .description('Page loader utility to download web-pages to local machine')
   .version('0.1.0')
   .option('-o, --output [dir]', 'output dir (default: "/home/user/current-dir")')
-  .option('-d --debug', 'run this option for debugging')
+  .option('-d, --debug', 'run this option for debugging')
   .argument('<url>')
 
   .action((url, option) => {
