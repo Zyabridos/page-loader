@@ -15,7 +15,6 @@ This CLI utile allows to download a web-page to local computer for offline use. 
 ### Setup
 ```bash
 $ git clone https://github.com/Zyabridos/page-loader
-$ cd page-loader
 $ make install
 ```
 
@@ -43,7 +42,7 @@ node bin/page-loader.js --debug <url>
 
 ```bash
 node bin/page-loader.js -h
-```
+```ls
 
 ### Demonstration of installed project with standart parameters:
 [![asciicast](https://asciinema.org/a/pfSoJ2mvXWfxHYwEjv4mTZkTv.svg)](https://asciinema.org/a/pfSoJ2mvXWfxHYwEjv4mTZkTv)
