@@ -32,10 +32,8 @@ export const isAbsolute = (url) => {
   return regex.test(url);
 };
 
-export const changeLinksToLocal = (absoluteURL) =>
-  createFolderName(absoluteURL) + '/_files/' + createFileName(absoluteURL);
+export const changeLinksToLocal = (absoluteURL) => `${createFolderName(absoluteURL)}/_files/${createFileName(absoluteURL)}`;
 
-export const writeFile = (fileName, fileContent, filepath = process.cwd()) =>
-  fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
+export const writeFile = (fileName, fileContent, filepath = process.cwd()) => fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
 
 export const makeAbsolute = (domain, link) => domain + link;

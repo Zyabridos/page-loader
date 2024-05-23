@@ -14,19 +14,18 @@ program
   .argument('<url>')
 
   .action((url, option) => {
-  if (option.debug) {
-    debug.enable('page-loader*,axios');
-  }
-  return pageLoader(url, option.output)
-  .then((filepath) => {
-    // filepath === undefined ?
-    console.log(`The page ${url} was successfully dowloaded into ${filepath}`
-    )})
-  .catch((error) => {
-    console.error(error.message)
-    process.exit(1);
-  })
-});
+    if (option.debug) {
+      debug.enable('page-loader*,axios');
+    }
+    return pageLoader(url, option.output)
+      .then((filepath) => {
+        console.log(`The page ${url} was successfully dowloaded into ${filepath}`);
+      })
+      .catch((error) => {
+        console.error(error.message);
+        process.exit(1);
+      });
+  });
 
 program.parse();
 
