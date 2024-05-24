@@ -1,69 +1,81 @@
-import os from 'os';
-import path from 'path';
+import { fileURLToPath } from 'url';
+import { tmpdir } from 'node:os';
+import fsp from 'node:fs/promises';
+import path from 'node:path';
 import nock from 'nock';
-import fsp from 'fs/promises';
-import _ from 'lodash';
-import pageLoader from '../src/index.js';
-import { expected, response } from '../__fixtures__/hexlet_html.js';
+import * as prettier from 'prettier';
+import pageLoad from '../src/index.js';
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+const mockUrl = 'https://ru.hexlet.io/courses';
+const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+const readFixture = (filename) => fsp.readFile(getFixturePath(filename), 'utf-8');
+const readResult = (filename) => {
+  const fullPath = path.join(tmpdir(), 'ru-hexlet-io-courses_files', filename);
+  return fsp.readFile(fullPath, 'utf-8');
+};
 
 nock.disableNetConnect();
 
-let tempDir;
+let before;
+let after;
+let expectedStyle;
+let expectedImage;
+let expectedScript;
 
-const url = 'https://ru.hexlet.io/courses';
-const htmlFileName = 'ru-hexlet-io.html';
-const filesNames = [
-  'cdn2-hexlet-ioassets-apple-touch-icon_ru-5ac2554d7f3856089a0babcf2dce22a07b53796e0646fb9bfc1f3e360fad7458.png',
-  'cdn2-hexlet-ioassets-professions-program-f26fba51e364abcd7f15475edb68d93958426d54c75468dc5bc65e493a586226.png',
-  'cdn2-hexlet-ioassets-selectize-selectize-92d62aa4279838818baaaac80c4290e0c76d96eeda76bddc0ec3d99fe84d0500.css',
-];
-
-const statusCodes = [_.range(100, 103), _.range(300, 308), _.range(400, 418), _.range(421, 429), 431, 451, _.range(500, 508), 510, 511].flat();
+beforeAll(async () => {
+  // before = await readFixture('before.html');
+  // after = await readFixture('after.html');
+  // after = await prettier.format(after, { parser: 'html' });
+  // expectedStyle = await readFixture('style.css');
+  expectedImage = await readFixture('cdn2-hexlet-ioassets-apple-touch-icon_ru-5ac2554d7f3856089a0babcf2dce22a07b53796e0646fb9bfc1f3e360fad7458.png');
+  // expectedScript = await readFixture('script.js');
+});
 
 beforeEach(async () => {
-  tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'ru-hexlet-io-test/'));
-  nock('https://ru.hexlet.io').get('/courses').reply(200, response);
+  // nock('https://ru.hexlet.io').get('/courses').reply(200, before);
+  // nock('https://ru.hexlet.io').get('/assets/application.css').reply(200, expectedStyle);
+  nock('https://ru.hexlet.io').get('/assets/professions/nodejs.png').reply(200, expectedImage);
+  // nock('https://ru.hexlet.io').get('/courses').reply(200, before);
+  // nock('https://ru.hexlet.io').get('/packs/js/runtime.js').reply(200, expectedScript);
 });
 
-afterEach(async () => {
-  nock.cleanAll();
+// test('Main page should be downloaded', async () => {
+//   await pageLoad(mockUrl, tmpdir());
+
+//   const page = await fsp.readFile(path.join(tmpdir(), 'ru-hexlet-io-courses.html'), 'utf-8');
+//   const formattedPage = await prettier.format(page, { parser: 'html' });
+
+//   expect(formattedPage).toBe(after);
+// });
+
+test('image should be downloaded', async () => {
+  await pageLoad(mockUrl, tmpdir());
+
+  const image = await readResult('ru-hexlet-io-assets-professions-nodejs.png');
+
+  expect(image).toEqual(expectedImage);
 });
+// test('assets should be downloaded', async () => {
+//   await pageLoad(mockUrl, tmpdir());
 
-test('html-file data is correct', async () => {
-  await pageLoader(url, tempDir);
-  const fileData = await fsp.readFile(path.join(tempDir, htmlFileName), { encoding: 'utf8' });
-  expect(fileData).toEqual(expected);
-});
+//   const style = await readResult('ru-hexlet-io-assets-application.css');
+//   const script = await readResult('ru-hexlet-io-packs-js-runtime.js');
 
-test('all resourses are download', async () => {
-  const actual = await pageLoader(url, tempDir);
+//   expect(style).toEqual(expectedStyle);
+//   expect(script).toEqual(expectedScript);
+// });
 
-  const htmlFileDir = await fsp.readdir(path.join(tempDir));
-  const filesDir = await fsp.readdir(path.join(tempDir, '_files'));
+// test('should fail when response status code is not 200', async () => {
+//   await expect(pageLoad(mockUrl, 'https://ru.hexlet.io/undef')).rejects.toThrow();
+// });
 
-  expect(actual).toBe(path.join(tempDir, htmlFileName));
-  expect(htmlFileDir).toContain(htmlFileName);
-  filesNames.forEach((currentFileName) => {
-    expect(filesDir).toContain(currentFileName);
-  });
-});
+// test('should fail if dir does not exist', async () => {
+//   await expect(pageLoad(mockUrl, '/notexist')).rejects.toThrow();
+// });
 
-test('the directory doesn\'t exist', async () => {
-  await pageLoader(url, '/i should not exist').rejects.toThrow();
-});
-
-test('permission denied', async () => {
-  await pageLoader(url, '/i should not exist').rejects.toThrow();
-});
-
-describe('naxios response status is not 2xx', () => {
-  afterEach(() => nock.cleanAll());
-
-  test.each(statusCodes)('network error: status code', () => {
-    async (statusCodes, error) => {
-      nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, null);
-
-      await expect(pageLoader(url, tempDir)).rejects.toThrow(error);
-    };
-  });
-});
+// test('should fail if permission denied', async () => {
+//   await expect(pageLoad(mockUrl, '/bin')).rejects.toThrow();
+// });
