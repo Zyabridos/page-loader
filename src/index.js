@@ -18,10 +18,7 @@ const log = debug('page-loader.js');
 const pageLoader = (domain, filepath = process.cwd()) => {
   log(`input data is domain: ${domain}, filepath: ${domain}`);
   const htmlFileName = `${createFileName(domain)}.html`;
-  let folderName = path.join(filepath, createFolderName(domain));
-  if (filepath === process.cwd()) {
-    folderName = createFolderName(domain);
-  }
+  const folderName = (createFolderName(domain));
 
   const filesDestination = path.join(folderName, '_files');
 
@@ -45,30 +42,16 @@ const pageLoader = (domain, filepath = process.cwd()) => {
 
         title: `downloading the file from ${link} and saving into ${path.join(filepath, filesDestination)}`,
         task: () => axios.get(link, { responseType: 'arraybuffer' })
-          // .then((response) => response.data),
           .then(() => response.data),
       }), { recursive: true, exitOnError: false });
 
       return Promise.all([
         downloadResources(links, filesDestination)
           .then(() => writeFile(htmlFileName, newHTML, path.join(folderName))),
-        new Listr(listerTasks).run().catch(() => { console.error(error.message); }),
+        new Listr(listerTasks).run().catch(() => {}),
       ]);
     })
     .then(() => path.join(filepath, htmlFileName));
 };
 
 export default pageLoader;
-
-// pageLoader(url, 'mydir');
-
-// asciinema rec
-// node ../bin/page-loader.js -h
-// tree
-// node ../bin/page-loader.js --option --debug new\ directory https://ru.hexlet.io/courses
-// tree
-// exit
-
-// node ../bin/page-loader.js --option --debug new\ directory https://ru.hexlet.io/courses
-
-// node ../bin/page-loader.js --debug https://ru.hexlet.io/courses

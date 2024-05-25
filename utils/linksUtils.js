@@ -5,10 +5,8 @@ import {
   createFileName,
   writeFile,
   mappingTagsAndAttrbs,
+  removeDoubleDash,
 } from './smallUtils.js';
-
-// const url = 'https://www.w3schools.com';
-// const url = 'https://ru.hexlet.io/courses';
 
 export const downloadResources = (links, dirname) => {
   const promises = links.map((link, i) => axios.get(link, { responseType: 'arraybuffer' })
@@ -35,7 +33,7 @@ export const extractLinks = ($, domain) => {
     });
     return current;
   });
-  return links;
+  return links.map((current) => removeDoubleDash(current));
 };
 
 export const replaceLinks = ($, replacementLinks, domain) => {

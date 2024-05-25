@@ -37,3 +37,9 @@ export const changeLinksToLocal = (absoluteURL) => `${createFolderName(absoluteU
 export const writeFile = (fileName, fileContent, filepath = process.cwd()) => fsp.writeFile(join(process.cwd(), filepath, fileName), fileContent);
 
 export const makeAbsolute = (domain, link) => domain + link;
+
+export const removeDoubleDash = (link) => {
+  const url = new URL(link);
+  const regex = /\/\//;
+  return `https://${url.hostname}${url.pathname.replace(regex, '/')}`;
+};
