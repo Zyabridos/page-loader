@@ -64,6 +64,10 @@ test('html-attached files are downloaded correct', async () => {
 describe('axios response status is not 2xx', () => {
   afterEach(() => nock.cleanAll());
 
+  test('should throw with invalid URL', () => {
+    await expect(pageLoad('/nonexist', '/notexist')).rejects.toThrow();
+  })
+
   test.each(statusCodes)('network error: status code', () => {
     async (statusCodes, error) => {
       nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, null);
