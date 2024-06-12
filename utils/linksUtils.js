@@ -32,10 +32,10 @@ export const extractLinks = ($, domain) => {
   entries.map(([tag, attribute]) => $(tag).each(function extractLink() {
     let href = new URL($(this).attr(attribute));
     if (isAbsolute(href)) {
-      links.push(href);
+      links.push(href.href);
     } else if (!isAbsolute(href)) {
       href = `${domain}/${href}`;
-      links.push(href);
+      links.push(href.href);
     }
   }));
   return links.filter((link) => isSameDomain(link, url));
