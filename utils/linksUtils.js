@@ -33,7 +33,7 @@ export const extractLinks = ($, domain) => {
     $(tag).each((_, element) => {
       const href = $(element).attr(attr);
 
-      if (href.startsWith('https:')) {
+      if (!href.startsWith('https:')) {
         return;
       }
 
