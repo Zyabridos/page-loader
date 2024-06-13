@@ -29,9 +29,9 @@ export const extractLinks = ($, domain) => {
   const links = [];
   const entries = Object.entries(mappingTagsAndAttrbs);
 
-  entries.forEach(([tagName, attrName]) => {
-    $(tagName).each((_, el) => {
-      const href = $(el).attr(attrName);
+  entries.forEach(([tag, attr]) => {
+    $(tag).each((_, element) => {
+      const href = $(element).attr(attr);
 
       if (href.startsWith('https:')) {
         return;
