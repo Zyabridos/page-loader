@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { all } from 'axios';
 import Listr from 'listr';
 import path from 'path';
 import fsp from 'fs/promises';
@@ -26,19 +26,27 @@ export const downloadResources = (links, filepath) => {
 };
 
 export const extractLinks = ($, domain) => {
-  const url = new URL(domain);
   const links = [];
   const entries = Object.entries(mappingTagsAndAttrbs);
-  entries.map(([tag, attribute]) => $(tag).each(function extractLink() {
-    let href = new URL($(this).attr(attribute));
-    if (isAbsolute(href)) {
-      links.push(href.href);
-    } else if (!isAbsolute(href)) {
-      href = `${domain}/${href}`;
-      links.push(href.href);
-    }
-  }));
-  return links.filter((link) => isSameDomain(link, url));
+
+  entries.forEach(([tagName, attrName]) => {
+    $(tagName).each((_, el) => {
+      const href = $(el).attr(attrName);
+
+      if (href.startsWith('https:')) {
+        return;
+      }
+
+      const url = new URL(href, domain);
+      const domainURL = new URL(domain);
+
+      if (url.origin === domainURL.origin) {
+        links.push(href);
+      }
+    });
+  });
+
+  return links.filter((link) => link !== undefined);
 };
 
 export const replaceLinks = ($, domain, filepath) => {

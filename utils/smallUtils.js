@@ -40,5 +40,3 @@ export const removeDoubleDash = (link) => {
   const regex = /\/\//;
   return `https://${url.hostname}${url.pathname.replace(regex, '/')}`;
 };
-
-// // const url = new URL('https://ru.hexlet.io/courses//u/new?back_to=https%3A%2F%2Fru.hexlet.io%2Fcourses');
