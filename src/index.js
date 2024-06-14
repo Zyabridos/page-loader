@@ -27,6 +27,8 @@ const pageLoader = (domain, filepath = process.cwd()) => {
     .then(() => {
       const $ = cheerio.load(html);
       const links = extractLinks($, domain);
+      log(`the extracted links are: ${links}`);
+
       return Promise.all([
         downloadResources(links, filesDestination)
           .then(() => replaceLinks($, domain, path.join(folderName, htmlFileName))),
