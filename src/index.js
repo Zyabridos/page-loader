@@ -16,7 +16,6 @@ const pageLoader = (domain, filepath = process.cwd()) => {
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
   const htmlFileName = `${createFileName(domain)}.html`;
   const folderName = (path.join(filepath, createFolderName(domain)));
-  const htmlFileDest = path.join(filepath, folderName, htmlFileName);
 
   const filesDestination = path.join(folderName, '_files');
 
@@ -36,12 +35,10 @@ const pageLoader = (domain, filepath = process.cwd()) => {
     .then(() => {
       const $ = cheerio.load(html);
       const newHtml = replaceLinks($, domain);
-      console.log(htmlFileDest);
-      // return fsp.writeFile(path.join((filepath, folderName, htmlFileName)), newHtml);
-      return fsp.writeFile(path.join((filepath, htmlFileName)), newHtml);
-      // return fsp.writeFile(htmlFileDest, newHtml);
+      // вод здесб не понимаю, почему не сохраняет в специально созданную папку ru-hexlet-io ?
+      return fsp.writeFile(path.join((filepath, folderName, htmlFileName)), newHtml);
     })
-    .then(() => path.join(htmlFileDest, htmlFileName));
+    .then(() => path.join(filepath, folderName, htmlFileName));
 };
 
 export default pageLoader;

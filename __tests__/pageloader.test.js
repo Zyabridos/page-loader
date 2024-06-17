@@ -63,14 +63,14 @@ test('html-attached files are downloaded correct', async () => {
 
 
 
-  // test('should throw with invalid URL', async () => {
-  //   await expect(pageLoader('/nonexist', '/notexist')).rejects.toThrow();
-  // })
+  test('should throw with invalid URL', async () => {
+    await expect(pageLoader('/nonexist', '/notexist')).rejects.toThrow();
+  })
 
-  // test.each(statusCodes)('network error: status code', async () => {
-  //   async (statusCodes, error) => {
-  //     nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, null);
+  test.each(statusCodes)('network error: status code', async () => {
+    async (statusCodes, error) => {
+      nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, null);
 
-  //     await expect(pageLoader(url, tempDir)).rejects.toThrow(error);
-  //   };
-  // });
+      await expect(pageLoader(url, tempDir)).rejects.toThrow(error);
+    };
+  });
