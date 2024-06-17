@@ -7,10 +7,15 @@ export const mappingTagsAndAttrbs = {
   script: 'src',
 };
 
-export const isSameDomain = (link1, link2) => {
-  const url1 = new URL(link1);
-  const url2 = new URL(link2);
-  return url1.origin === url2.origin;
+// export const isSameDomain = (link1, link2) => {
+//   const url1 = new URL(link1);
+//   const url2 = new URL(link2);
+//   return url1.origin === url2.origin;
+// };
+
+export const isSameDomain = (link, url) => {
+  const originalHost = new URL(url).origin;
+  return new URL(link, originalHost).origin === originalHost;
 };
 
 export const createFolderName = (domain) => {
@@ -31,8 +36,6 @@ export const isAbsolute = (url) => {
   return regex.test(url);
 };
 
-export const changeLinksToLocal = (absoluteURL) => path.join(createFolderName(absoluteURL), '_files', createFileName(absoluteURL));
-
 export const makeAbsolute = (domain, link) => domain + link;
 
 export const removeDoubleDash = (link) => {
@@ -40,3 +43,17 @@ export const removeDoubleDash = (link) => {
   const regex = /\/\//;
   return `https://${url.hostname}${url.pathname.replace(regex, '/')}`;
 };
+
+// const keys = Object.keys(mappingTagsAndAttrbs);
+// console.log(keys);
+
+export const changeLinksToLocal = (url, domain) => {
+  if (isAbsolute(url)) {
+    return path.join(createFolderName(url), '_files', createFileName(url));
+  }
+
+  const absoluteURL = (makeAbsolute(domain, url));
+  return path.join(createFolderName(absoluteURL), '_files', createFileName(absoluteURL));
+};
+// console.log(changeLink('https://ru.hexlet.io/courses', 'https://ru.hexlet.io/courses'));
+// console.log(changeLink('/manifest.json', 'https://ru.hexlet.io/courses'));
