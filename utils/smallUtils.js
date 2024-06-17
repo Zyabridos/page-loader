@@ -7,12 +7,6 @@ export const mappingTagsAndAttrbs = {
   script: 'src',
 };
 
-// export const isSameDomain = (link1, link2) => {
-//   const url1 = new URL(link1);
-//   const url2 = new URL(link2);
-//   return url1.origin === url2.origin;
-// };
-
 export const isSameDomain = (link, url) => {
   const originalHost = new URL(url).origin;
   return new URL(link, originalHost).origin === originalHost;
@@ -43,9 +37,6 @@ export const removeDoubleDash = (link) => {
   const regex = /\/\//;
   return `https://${url.hostname}${url.pathname.replace(regex, '/')}`;
 };
-
-// const keys = Object.keys(mappingTagsAndAttrbs);
-// console.log(keys);
 
 export const changeLinksToLocal = (url, domain) => {
   if (isAbsolute(url)) {

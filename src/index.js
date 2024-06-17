@@ -35,7 +35,7 @@ const pageLoader = (domain, filepath = process.cwd()) => {
     .then(() => {
       const $ = cheerio.load(html);
       const newHtml = replaceLinks($, domain);
-      // вод здесб не понимаю, почему не сохраняет в специально созданную папку ru-hexlet-io ?
+      // вод здесь не понимаю, почему не сохраняет в специально созданную папку ru-hexlet-io ?
       return fsp.writeFile(path.join((filepath, folderName, htmlFileName)), newHtml);
     })
     .then(() => path.join(filepath, folderName, htmlFileName));
