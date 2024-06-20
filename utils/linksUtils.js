@@ -38,17 +38,9 @@ export const extractLinks = ($, domain) => {
   });
 
   return links
-  // вот так нормально не получится :(, но зато так мы не пропустим не абсолютные ссылки
-  // .filter((link) => link !== undefined);
     .filter((link) => !link.endsWith(undefined))
-    .map((link) => new URL(link).href)
-  // может, таки оставим сторонние домены? Как-никак все png, jpg и css находятся на
-  // https://cdn2.hexlet.io/assets/
-  // там много другой ерунды, но можно фильтровать по своему желанию regex = /\.js|.css|.png|.jpg/g;
-  // или еще какие советы есть?
-    .filter((link) => isSameDomain(link, domain));
-  // console.log(result);
-  // return result;
+    .map((link) => new URL(link).href);
+  // .filter((link) => isSameDomain(link, domain));
 };
 
 export const replaceLinks = ($, domain) => {
