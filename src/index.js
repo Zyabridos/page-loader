@@ -1,4 +1,3 @@
-import * as cheerio from 'cheerio';
 import fsp from 'fs/promises';
 import axios from 'axios';
 import debug from 'debug';
@@ -24,20 +23,19 @@ const pageLoader = (domain, filepath = process.cwd()) => {
       html = response.data;
     })
     .then(() => {
-      log(`creating directories for files: ${filesDestination}`);
-      return fsp.mkdir(filesDestination, { recursive: true });
+      log(`checking the access to the ${filepath} and creating directories for files: ${filesDestination}`);
+      return fsp.access(filepath)
+        .then(() => fsp.mkdir(filesDestination, { recursive: true }));
     })
     .then(() => {
-      const $ = cheerio.load(html);
-      const links = extractLinks($, domain);
+      const links = extractLinks(html, domain);
       log(`downloading extracted resourses: ${links}`);
       return downloadResources(links, filesDestination);
     })
     .then(() => {
-      const $ = cheerio.load(html);
       log(`writing result to ${htmlFileFolder}`);
-      const newHtml = replaceLinks($, domain);
-      return fsp.writeFile(htmlFileFolder, newHtml);
+      const newHtml = replaceLinks(html, domain);
+      return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
     })
     .then(() => path.join(filepath, htmlFileName));
 };

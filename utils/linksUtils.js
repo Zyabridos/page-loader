@@ -2,6 +2,7 @@ import axios from 'axios';
 import Listr from 'listr';
 import path from 'path';
 import fsp from 'fs/promises';
+import * as cheerio from 'cheerio';
 import { URL } from 'url';
 import {
   isAbsolute,
@@ -26,7 +27,8 @@ export const downloadResources = (links, filepath) => {
   return new Listr(promises, { recursive: true, exitOnError: false }).run().catch(() => {});
 };
 
-export const extractLinks = ($, domain) => {
+export const extractLinks = (html, domain) => {
+  const $ = cheerio.load(html);
   const links = [];
   const entries = Object.entries(mappingTagsAndAttrbs);
 
@@ -43,7 +45,9 @@ export const extractLinks = ($, domain) => {
     .filter((link) => isSameDomain(link, domain));
 };
 
-export const replaceLinks = ($, domain) => {
+export const replaceLinks = (html, domain) => {
+// export const replaceLinks = (html, domain, fileDestination) => {
+  const $ = cheerio.load(html);
   const entries = Object.entries(mappingTagsAndAttrbs);
 
   entries.forEach(([tag, attr]) => {
@@ -56,4 +60,5 @@ export const replaceLinks = ($, domain) => {
     });
   });
   return $.html();
+  // return fsp.writeFile(fileDestination, $.html());
 };

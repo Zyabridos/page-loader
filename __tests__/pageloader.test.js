@@ -67,6 +67,10 @@ test('html-attached files are downloaded correct', async () => {
     await expect(pageLoader('/nonexist', '/notexist')).rejects.toThrow();
   })
 
+  test('should throw when dirrectory does not exists or the access is denied', async () => {
+  await expect(pageLoader(url, '/notexist')).rejects.toThrow();
+  })
+
   test.each(statusCodes)('network error: status code', async () => {
     async (statusCodes, error) => {
       nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, null);
