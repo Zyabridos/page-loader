@@ -6,7 +6,6 @@ import path from 'path';
 import { downloadResources, extractLinks, replaceLinks } from '../utils/linksUtils.js';
 import {
   createFileName,
-  createFolderName,
 } from '../utils/smallUtils.js';
 
 const log = debug('page-loader.js');
@@ -15,10 +14,9 @@ const pageLoader = (domain, filepath = process.cwd()) => {
   let html;
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
   const htmlFileName = `${createFileName(domain)}.html`;
-  const folderName = (path.join(filepath, createFolderName(domain)));
-  const htmlFileFolder = path.join((filepath, folderName, htmlFileName));
+  const htmlFileFolder = path.join((filepath, htmlFileName));
 
-  const filesDestination = path.join(folderName, '_files');
+  const filesDestination = path.join(filepath, '_files');
 
   return axios.get(domain)
     .then((response) => {
@@ -39,10 +37,9 @@ const pageLoader = (domain, filepath = process.cwd()) => {
       const $ = cheerio.load(html);
       log(`writing result to ${htmlFileFolder}`);
       const newHtml = replaceLinks($, domain);
-      // вод здесь не понимаю, почему не сохраняет в специально созданную папку ru-hexlet-io ?
       return fsp.writeFile(htmlFileFolder, newHtml);
     })
-    .then(() => path.join(filepath, folderName, htmlFileName));
+    .then(() => path.join(filepath, htmlFileName));
 };
 
 export default pageLoader;

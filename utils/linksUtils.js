@@ -39,8 +39,8 @@ export const extractLinks = ($, domain) => {
 
   return links
     .filter((link) => !link.endsWith(undefined))
-    .map((link) => new URL(link).href);
-  // .filter((link) => isSameDomain(link, domain));
+    .map((link) => new URL(link).href)
+    .filter((link) => isSameDomain(link, domain));
 };
 
 export const replaceLinks = ($, domain) => {
