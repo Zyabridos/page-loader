@@ -46,5 +46,3 @@ export const changeLinksToLocal = (url, domain) => {
   const absoluteURL = (makeAbsolute(domain, url));
   return path.join(createFolderName(absoluteURL), '_files', createFileName(absoluteURL));
 };
-// console.log(changeLink('https://ru.hexlet.io/courses', 'https://ru.hexlet.io/courses'));
-// console.log(changeLink('/manifest.json', 'https://ru.hexlet.io/courses'));
