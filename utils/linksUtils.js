@@ -46,7 +46,6 @@ export const extractLinks = (html, domain) => {
 };
 
 export const replaceLinks = (html, domain) => {
-// export const replaceLinks = (html, domain, fileDestination) => {
   const $ = cheerio.load(html);
   const entries = Object.entries(mappingTagsAndAttrbs);
 
@@ -60,5 +59,4 @@ export const replaceLinks = (html, domain) => {
     });
   });
   return $.html();
-  // return fsp.writeFile(fileDestination, $.html());
 };
