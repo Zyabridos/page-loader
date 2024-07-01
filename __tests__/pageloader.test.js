@@ -30,6 +30,7 @@ beforeAll(async () => {
   expectedJS = await readFixture('JSfile.js');
 })
 
+
 beforeEach(async () => {
 
   nock('https://ru.hexlet.io').get('/courses').reply(200, response);
@@ -64,17 +65,19 @@ test('html-attached files are downloaded correct', async () => {
 
 
   test('should throw with invalid URL', async () => {
-    await expect(pageLoader('/nonexist', '/notexist')).rejects.toThrow();
+    const errorMessage = `TypeError: Invalid URL`
+    await expect(pageLoader('/nonexist', '/notexist')).rejects.toThrow(errorMessage);
   })
 
   test('should throw when dirrectory does not exists or the access is denied', async () => {
-  await expect(pageLoader(url, '/notexist')).rejects.toThrow();
+    const errorMessage = "ENOENT: no such file or directory, access '/notexist'";
+    await expect(pageLoader(url, '/notexist')).rejects.toThrow(errorMessage);
   })
 
-  // test.each(statusCodes)('network error: status code', async () => {
-  //   async (statusCodes, error) => {
-  //     nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, null);
+  test.each(statusCodes)('network error: status code', async () => {
+    async (statusCodes, error) => {
+      nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, null);
 
-  //     await expect(pageLoader(url, tempDir)).rejects.toThrow(error);
-  //   };
-  // });
+      await expect(pageLoader(url, tempDir)).rejects.toThrow(error);
+    };
+  });

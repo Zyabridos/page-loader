@@ -37,7 +37,7 @@ const pageLoader = (domain, filepath = process.cwd()) => {
       const newHtml = replaceLinks(html, domain);
       return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
     })
-    .then(() => path.join(filepath, htmlFileName));
+    .then(() => path.join(filepath));
 };
 
 export default pageLoader;
