@@ -6,7 +6,7 @@ import * as cheerio from 'cheerio';
 import { URL } from 'url';
 import {
   isAbsolute,
-  changeLinksToLocal,
+  changeLinkToLocal,
   createFileName,
   mappingTagsAndAttrbs,
   isSameDomain,
@@ -27,7 +27,7 @@ export const downloadResources = (links, filepath) => {
   return new Listr(promises, { recursive: true, exitOnError: false }).run().catch(() => {});
 };
 
-export const extractLinks = (html, domain) => {
+export const extractAndReplaceLinks = (html, domain) => {
   const $ = cheerio.load(html);
   const links = [];
   const entries = Object.entries(mappingTagsAndAttrbs);
@@ -38,25 +38,20 @@ export const extractLinks = (html, domain) => {
       return isAbsolute(href) ? links.push(href) : links.push(makeAbsolute(domain, href));
     });
   });
-
-  return links
-    .filter((link) => !link.endsWith(undefined))
-    .map((link) => new URL(link).href)
-    .filter((link) => isSameDomain(link, domain));
-};
-
-export const replaceLinks = (html, domain) => {
-  const $ = cheerio.load(html);
-  const entries = Object.entries(mappingTagsAndAttrbs);
-
   entries.forEach(([tag, attr]) => {
     $(tag).each(function replaceLink() {
-      const current = $(this).attr(attr);
-      if (current && isSameDomain(current, domain)) {
-        const newSrc = changeLinksToLocal(current, domain);
+      const href = $(this).attr(attr);
+      if (href && isSameDomain(href, domain)) {
+        const newSrc = changeLinkToLocal(href, domain);
         $(this).attr(attr, newSrc);
       }
     });
   });
-  return $.html();
+
+  return [$.html(), links
+    .filter((link) => !link.endsWith(undefined))
+    .map((link) => new URL(link).href)
+    .filter((link) => isSameDomain(link, domain))
+    .filter((link, index) => links.indexOf(link) !== index),
+  ];
 };

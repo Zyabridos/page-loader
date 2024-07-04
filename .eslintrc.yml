@@ -5,13 +5,13 @@ parserOptions:
   ecmaVersion: latest
   sourceType: module
 rules: {
-
-'max-len': ["error", { "code": 200 }],
-  "import/extensions": [
-      "error",
-      "ignorePackages",
-    {
-      "js": "always"
-    }
-  ]
+  'no-console': 'off',
+  "max-len": ["error", { "code": 200 }],
+    "import/extensions": [
+        "error",
+        "ignorePackages",
+      {
+        "js": "always"
+      }
+    ]
 }

@@ -30,3 +30,5 @@ program
 program.parse();
 
 // node bin/page-loader.js https://ru.hexlet.io/courses
+// node bin/page-loader.js https://www.vg.no/
+// node bin/page-loader.js https://www.w3schools.com/

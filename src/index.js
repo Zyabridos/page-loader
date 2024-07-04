@@ -2,7 +2,9 @@ import fsp from 'fs/promises';
 import axios from 'axios';
 import debug from 'debug';
 import path from 'path';
-import { downloadResources, extractLinks, replaceLinks } from '../utils/linksUtils.js';
+import {
+  downloadResources, extractAndReplaceLinks,
+} from '../utils/linksUtils.js';
 import {
   createFileName,
 } from '../utils/smallUtils.js';
@@ -11,11 +13,12 @@ const log = debug('page-loader.js');
 
 const pageLoader = (domain, filepath = process.cwd()) => {
   let html;
+  let newHtml;
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
   const htmlFileName = `${createFileName(domain)}.html`;
   const htmlFileFolder = path.join((filepath, htmlFileName));
 
-  const filesDestination = path.join(filepath, '_files');
+  const filesDestination = path.join(filepath, `${createFileName(domain)}_files`);
 
   return axios.get(domain)
     .then((response) => {
@@ -28,13 +31,13 @@ const pageLoader = (domain, filepath = process.cwd()) => {
         .then(() => fsp.mkdir(filesDestination, { recursive: true }));
     })
     .then(() => {
-      const links = extractLinks(html, domain);
+      const [tempHtml, links] = extractAndReplaceLinks(html, domain);
       log(`downloading extracted resourses: ${links}`);
+      newHtml = tempHtml;
       return downloadResources(links, filesDestination);
     })
     .then(() => {
       log(`writing result to ${htmlFileFolder}`);
-      const newHtml = replaceLinks(html, domain);
       return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
     })
     .then(() => path.join(filepath));
