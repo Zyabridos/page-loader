@@ -42,25 +42,7 @@ export const createFileName = (link, domain) => {
   }
   const url = new URL(absoluteUrl);
   const { dir, name, ext } = path.parse(absoluteUrl);
-  // remove https:// or http://
   const rightDir = dir.split(`${url.protocol}//`)[1];
   const fileNameBase = removeDoubleDashes(`${rightDir}/${name}`);
   return replaceSymbolsWithDash(fileNameBase) + (ext || '.html');
 };
-
-export const removeDoubleHyphens = (string) => {
-  const regex = /--/;
-  return string.replace(regex, '-');
-};
-
-const domain = 'https://ru.hexlet.io/courses';
-const domain2 = 'https://ru.hexlet.io/courses/';
-const hrefPNG = '/assets/professions/nodejs.png';
-
-// console.log(createFileName('https://ru-hexlet-io-courses/courses', 'https://ru.hexlet.io/courses'));
-// console.log(makeAbsolute('https://ru.hexlet.io/courses', '/manifest.json'));
-// console.log(createFolderName(domain));
-// console.log(path.join(`${createFolderName(domain)}_files`, createFileName(hrefPNG, domain)));
-const filepath = './';
-console.log(path.join(filepath, `${createFolderName(domain)}_files`));
-console.log(path.join(filepath, `${createFolderName(domain2)}_files`));
