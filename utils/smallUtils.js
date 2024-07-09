@@ -12,16 +12,20 @@ export const isSameDomain = (link, url) => {
   return new URL(link, originalHost).origin === originalHost;
 };
 
-export const createFolderName = (domain) => {
-  const url = new URL(domain);
-  const regex = /[^A-Z0-9]+/gi;
-  return url.hostname.replace(regex, '-');
+export const replaceSymbolsWithDash = (string) => {
+  const regex = /\/|\./gi;
+  return string.replace(regex, '-');
 };
 
-export const createFileName = (domain) => {
+export const removeDoubleDashes = (string) => {
+  const regex = /\/\//;
+  return string.replace(regex, '/');
+};
+
+export const createFolderName = (domain) => {
   const url = new URL(domain);
-  const regex = /[^A-Z0-9]+/gi;
-  return url.hostname.replace(regex, '-') + url.pathname.replace(regex, '-');
+  const folderNameTemp = url.hostname + url.pathname;
+  return folderNameTemp.endsWith('/') ? replaceSymbolsWithDash(folderNameTemp).slice(0, -1) : replaceSymbolsWithDash(folderNameTemp);
 };
 
 export const isAbsolute = (url) => {
@@ -31,9 +35,17 @@ export const isAbsolute = (url) => {
 
 export const makeAbsolute = (domain, link) => domain + link;
 
-export const removeDoubleDashes = (string) => {
-  const regex = /\/\//;
-  return string.replace(regex, '/');
+export const createFileName = (link, domain) => {
+  let absoluteUrl = link;
+  if (!isAbsolute(absoluteUrl)) {
+    absoluteUrl = makeAbsolute(domain, link);
+  }
+  const url = new URL(absoluteUrl);
+  const { dir, name, ext } = path.parse(absoluteUrl);
+  // remove https:// or http://
+  const rightDir = dir.split(`${url.protocol}//`)[1];
+  const fileNameBase = removeDoubleDashes(`${rightDir}/${name}`);
+  return replaceSymbolsWithDash(fileNameBase) + (ext || '.html');
 };
 
 export const removeDoubleHyphens = (string) => {
@@ -41,20 +53,14 @@ export const removeDoubleHyphens = (string) => {
   return string.replace(regex, '-');
 };
 
-const replaceSymbolsWithDash = (string) => {
-  const regex = /\/|\./gi;
-  return string.replace(regex, '-');
-};
+const domain = 'https://ru.hexlet.io/courses';
+const domain2 = 'https://ru.hexlet.io/courses/';
+const hrefPNG = '/assets/professions/nodejs.png';
 
-export const changeLinkToLocal = (url, domain) => {
-  let absoluteUrl = url;
-  if (!isAbsolute(url)) {
-    absoluteUrl = makeAbsolute(domain, url);
-  }
-  const { name, ext, dir } = path.parse(absoluteUrl.slice(domain.length));
-  const fileName = removeDoubleHyphens(replaceSymbolsWithDash(`${dir}-${name}`) + (ext || '.html'));
-
-  const hostnameURL = new URL(domain);
-
-  return removeDoubleHyphens(path.join(`${createFileName(domain)}_files`, `${replaceSymbolsWithDash(hostnameURL.hostname)}-${fileName}`));
-};
+// console.log(createFileName('https://ru-hexlet-io-courses/courses', 'https://ru.hexlet.io/courses'));
+// console.log(makeAbsolute('https://ru.hexlet.io/courses', '/manifest.json'));
+// console.log(createFolderName(domain));
+// console.log(path.join(`${createFolderName(domain)}_files`, createFileName(hrefPNG, domain)));
+const filepath = './';
+console.log(path.join(filepath, `${createFolderName(domain)}_files`));
+console.log(path.join(filepath, `${createFolderName(domain2)}_files`));

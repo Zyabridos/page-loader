@@ -7,6 +7,7 @@ import {
 } from '../utils/linksUtils.js';
 import {
   createFileName,
+  createFolderName,
 } from '../utils/smallUtils.js';
 
 const log = debug('page-loader.js');
@@ -15,10 +16,12 @@ const pageLoader = (domain, filepath = process.cwd()) => {
   let html;
   let newHtml;
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
-  const htmlFileName = `${createFileName(domain)}.html`;
+  const htmlFileName = `${createFileName(domain)}`;
   const htmlFileFolder = path.join((filepath, htmlFileName));
 
-  const filesDestination = path.join(filepath, `${createFileName(domain)}_files`);
+  const filesDestination = path.join(filepath, `${createFolderName(domain)}_files`);
+  // console.log(domain);
+  console.log(`The folder name is: ${filesDestination}`);
 
   return axios.get(domain)
     .then((response) => {
@@ -34,7 +37,7 @@ const pageLoader = (domain, filepath = process.cwd()) => {
       const [tempHtml, links] = extractAndReplaceLinks(html, domain);
       log(`downloading extracted resourses: ${links}`);
       newHtml = tempHtml;
-      return downloadResources(links, filesDestination);
+      return downloadResources(links, domain, filesDestination);
     })
     .then(() => {
       log(`writing result to ${htmlFileFolder}`);
