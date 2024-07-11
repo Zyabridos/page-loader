@@ -3,7 +3,7 @@ import axios from 'axios';
 import debug from 'debug';
 import path from 'path';
 import {
-  downloadResources, extractLinks, replaceLinks,
+  downloadResources, extractResourses, processLinks, replaceLinks,
 } from '../utils/linksUtils.js';
 import {
   createFileName,
@@ -32,9 +32,11 @@ const pageLoader = (domain, filepath = process.cwd()) => {
         .then(() => fsp.mkdir(filesDestination, { recursive: true }));
     })
     .then(() => {
-      const links = extractLinks(html, domain);
-      log(`downloading extracted resourses: ${links}`);
+      const resourses = extractResourses(html);
+      const links = resourses.map((link) => processLinks(link.href, domain));
       newHtml = replaceLinks(html, domain, links);
+      log(`downloading extracted resourses: ${links}`);
+
       return downloadResources(links, domain, filesDestination);
     })
     .then(() => {
