@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import nock from 'nock';
 import fsp from 'fs/promises';
-import { createFileName } from '../utils/smallUtils.js';
+import { createHtmlFileName } from '../utils/smallUtils.js';
 import pageLoader from '../src/index.js';
 
 nock.disableNetConnect();
@@ -21,8 +21,8 @@ const htmlFileName = 'ru-hexlet-io-courses.html';
 const filesDestination = 'ru-hexlet-io-courses_files';
 
 beforeAll(async () => {
-  // tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'ru-hexlet-io-test'));
-  tempDir = path.join(__dirname, '..', '__fixtures__');
+  tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'ru-hexlet-io-test'));
+  // tempDir = path.join(__dirname, '..', '__fixtures__');
   response = await readFixture('response.html');
   expected = await readFixture('expected.html');
   expectedCSS = await readFixture('style.css');
@@ -43,19 +43,19 @@ afterEach(async () => {
   nock.cleanAll();
 });
 
-// test('html-file name is correct', async () => {
-//   await pageLoader(domain, tempDir);
-//   const actual = `${createFileName(domain)}.html`;
-//   const expected = 'ru-hexlet-io-courses.html'
-//   expect(actual).toEqual(expected);
-// });
+test('html-file name is correct', async () => {
+  await pageLoader(domain, tempDir);
+  const actual = `${createHtmlFileName(domain)}`;
+  const expected = 'ru-hexlet-io-courses.html'
+  expect(actual).toEqual(expected);
+});
 
-// test('html-file data is correct', async () => {
-//   await pageLoader(domain, tempDir);
-//   const fileData = await fsp.readFile(path.join(tempDir, htmlFileName), { encoding: 'utf8' });
-//   // @@ -10,7 +10,7 @@ - это как-то по-новому не сходятся тесты
-//   expect(fileData).toEqual(expected);
-// });
+test('html-file data is correct', async () => {
+  await pageLoader(domain, tempDir);
+  const fileData = await fsp.readFile(path.join(tempDir, htmlFileName), { encoding: 'utf8' });
+  // @@ -10,7 +10,7 @@ - это как-то по-новому не сходятся тесты
+  expect(fileData).toEqual(expected);
+});
 
 test('html-attached files are downloaded correct', async () => {
   await pageLoader(domain, tempDir)
@@ -69,29 +69,25 @@ test('html-attached files are downloaded correct', async () => {
 });
 
 
-//   describe('file system errors', () => {
-//     test('should throw when dirrectory does not exists', async () => {
-//     const expectedErrorMessage = "ENOENT: no such file or directory, access '/notexist'";
-//     await expect(pageLoader(domain, '/notexist')).rejects.toThrow(expectedErrorMessage);
-//     }) ;
-//     test('should throw when access is denied', async () => {
-//       await fsp.chmod(tempDir, 666);
-//       // и с регуляркой, и с интерполяцией появлятя ненужный слэш в начале /"EACCES: permission denied, mkdir"/
-//       // const expectedErrorMessage = /"EACCES: permission denied, mkdir"/
-//       await expect(pageLoader(domain, tempDir)).rejects.toThrow();
-//     });
-// });
+  describe('file system errors', () => {
+    test('should throw when dirrectory does not exists', async () => {
+    const expectedErrorMessage = "ENOENT: no such file or directory, access '/notexist'";
+    await expect(pageLoader(domain, '/notexist')).rejects.toThrow(expectedErrorMessage);
+    }) ;
+    test('should throw when access is denied', async () => {
+      await fsp.chmod(tempDir, 666);
+      // и с регуляркой, и с интерполяцией появлятя ненужный слэш в начале /"EACCES: permission denied, mkdir"/
+      // const expectedErrorMessage = /"EACCES: permission denied, mkdir"/
+      await expect(pageLoader(domain, tempDir)).rejects.toThrow();
+    });
+});
 
-// const statusCodes = [404, 500]
+const statusCodes = [404, 500]
 
-//  test.each(statusCodes)('network error: status code', async () => {
-//     async (statusCodes) => {
-//       nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, undefined);
+ test.each(statusCodes)('network error: status code', async () => {
+    async (statusCodes) => {
+      nock('https://ru.hexlet.io').persist().get('/courses').reply(statusCodes, undefined);
 
-//       await expect(pageLoader(domain, tempDir)).rejects.toThrow();
-//     };
-//   });
-
-// ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png
-
-// ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png
+      await expect(pageLoader(domain, tempDir)).rejects.toThrow();
+    };
+  });

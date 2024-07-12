@@ -13,13 +13,10 @@ export const isSameDomain = (link, url) => {
 };
 
 export const replaceSymbolsWithDash = (string) => {
-  const regex = /\/|\./gi;
-  return string.replace(regex, '-');
-};
-
-export const removeDoubleDashes = (string) => {
-  const regex = /\/\//;
-  return string.replace(regex, '/');
+  const regex1 = /\/\//;
+  const regex2 = /\/|\./gi;
+  return string.replace(regex1, '/')
+    .replace(regex2, '-');
 };
 
 export const createFolderName = (domain) => {
@@ -33,16 +30,22 @@ export const isAbsolute = (url) => {
   return regex.test(url);
 };
 
-export const makeAbsolute = (domain, link) => domain + link;
+export const absolutizeLinks = (links, domain) => links.map((link) => (isAbsolute(link) ? link : domain + link));
 
-export const createFileName = (link, domain) => {
+export const createHtmlFileName = (domain) => {
+  const url = new URL(domain);
+  const base = domain.split(`${url.protocol}//`)[1];
+  return `${replaceSymbolsWithDash(base)}.html`;
+};
+
+export const createAssetName = (link, domain) => {
   let absoluteUrl = link;
-  if (!isAbsolute(absoluteUrl)) {
-    absoluteUrl = makeAbsolute(domain, link);
+  if (!isAbsolute(link)) {
+    absoluteUrl = domain + link;
   }
-  const url = new URL(absoluteUrl);
-  const { dir, name, ext } = path.parse(absoluteUrl);
-  const rightDir = dir.split(`${url.protocol}//`)[1];
-  const fileNameBase = removeDoubleDashes(`${rightDir}/${name}`);
-  return replaceSymbolsWithDash(fileNameBase) + (ext || '.html');
+  const { name, ext, dir } = path.parse(absoluteUrl.slice(domain.length));
+  const fileName = (`${dir}/${name}`);
+  const url = new URL(domain);
+
+  return replaceSymbolsWithDash(`${url.hostname}${fileName}`) + (ext || '.html');
 };
