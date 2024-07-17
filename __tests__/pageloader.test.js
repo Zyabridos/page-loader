@@ -22,7 +22,6 @@ const filesDestination = 'ru-hexlet-io-courses_files';
 
 beforeAll(async () => {
   tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'ru-hexlet-io-test'));
-  // tempDir = path.join(__dirname, '..', '__fixtures__');
   response = await readFixture('response.html');
   expected = await readFixture('expected.html');
   expectedCSS = await readFixture('style.css');
@@ -34,7 +33,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   nock('https://ru.hexlet.io').get('/courses').reply(200, response);
   nock('https://ru.hexlet.io').get('/courses/assets/application.css').reply(200, expectedCSS);
-  nock('https://ru.hexlet.io').get('/assets/professions/nodejs.png').reply(200, expectedPNG);
+  nock('https://ru.hexlet.io').get('/courses/assets/professions/nodejs.png').reply(200, expectedPNG);
   nock('https://ru.hexlet.io').get('/courses').reply(200, response);
   nock('https://ru.hexlet.io').get('/courses/packs/js/runtime.js').reply(200, expectedJS);
 });
@@ -53,7 +52,6 @@ test('html-file name is correct', async () => {
 test('html-file data is correct', async () => {
   await pageLoader(domain, tempDir);
   const fileData = await fsp.readFile(path.join(tempDir, htmlFileName), { encoding: 'utf8' });
-  // @@ -10,7 +10,7 @@ - это как-то по-новому не сходятся тесты
   expect(fileData).toEqual(expected);
 });
 
@@ -76,8 +74,6 @@ test('html-attached files are downloaded correct', async () => {
     }) ;
     test('should throw when access is denied', async () => {
       await fsp.chmod(tempDir, 666);
-      // и с регуляркой, и с интерполяцией появлятя ненужный слэш в начале /"EACCES: permission denied, mkdir"/
-      // const expectedErrorMessage = /"EACCES: permission denied, mkdir"/
       await expect(pageLoader(domain, tempDir)).rejects.toThrow();
     });
 });
