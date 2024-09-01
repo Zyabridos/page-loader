@@ -1,6 +1,6 @@
 // @ts-check
 import os from 'os';
-import path from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import nock from 'nock';
 import fsp from 'fs/promises';
@@ -18,7 +18,6 @@ const readActual = (filename) => fsp.readFile(path.join(tempDir, 'ru-hexlet-io-c
 
 const domain = 'https://ru.hexlet.io/courses';
 const htmlFileName = 'ru-hexlet-io-courses.html';
-const filesDestination = 'ru-hexlet-io-courses_files';
 
 beforeAll(async () => {
   tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'ru-hexlet-io-test'));
@@ -34,7 +33,7 @@ beforeEach(async () => {
   nock('https://ru.hexlet.io').get('/courses').reply(200, response);
   nock('https://ru.hexlet.io').get('/courses/assets/application.css').reply(200, expectedCSS);
   nock('https://ru.hexlet.io').get('/courses/assets/professions/nodejs.png').reply(200, expectedPNG);
-  nock('https://ru.hexlet.io').get('/courses').reply(200, response);
+  nock('https://ru.hexlet.io').get('/courses/courses').reply(200, response);
   nock('https://ru.hexlet.io').get('/courses/packs/js/runtime.js').reply(200, expectedJS);
 });
 

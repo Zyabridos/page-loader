@@ -43,7 +43,9 @@ export const extractAndReplaceLinks = (html, domain) => {
       const newSrc = extractedLinks
         .filter((currentHref) => isSameDomain(currentHref, domain))
         .map((currentHref) => (`${createFolderName(domain)}_files/${createAssetName(currentHref, domain)}`));
-      if (isSameDomain($(element).attr(attr), domain)) { $(element).attr(attr, newSrc[index]); }
+      if (isSameDomain(href, domain) && href !== undefined) {
+        $(element).attr(attr, newSrc[index]);
+      }
     });
   });
   return { extractedLinks: uniq(extractedLinks).filter((link) => link !== undefined), changedHtml: $.html() };

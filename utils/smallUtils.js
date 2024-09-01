@@ -43,9 +43,20 @@ export const createAssetName = (link, domain) => {
   if (!isAbsolute(link)) {
     absoluteUrl = domain + link;
   }
-  const { name, ext, dir } = path.parse(absoluteUrl.slice(domain.length));
-  const fileName = (`${dir}/${name}`);
+  const { name, ext, dir } = path.parse(absoluteUrl);
+  let newDir = dir.split(domain)[1];
+  if (newDir === undefined) {
+    newDir = '';
+  }
+  const fileName = `${newDir}/${name}`;
   const url = new URL(domain);
-
-  return replaceSymbolsWithDash(`${url.hostname}${fileName}`) + (ext || '.html');
+  return replaceSymbolsWithDash(url.hostname + fileName) + (ext || '.html');
 };
+
+// const rss = 'https://ru.hexlet.io/lessons.rss';
+// const json = '/manifest.json';
+// const css = '/assets/application.css';
+// const domain = 'https://ru.hexlet.io/courses';
+// console.log(createAssetName(rss, domain));
+// console.log(createAssetName(json, domain));
+// console.log(createAssetName(css, domain));
