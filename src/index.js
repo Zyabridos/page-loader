@@ -15,6 +15,7 @@ const log = debug('page-loader.js');
 const pageLoader = (domain, filepath = process.cwd()) => {
   let html;
   let newHtml;
+  let links;
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
   const htmlFileName = createHtmlFileName(domain);
   const htmlFileFolder = path.join((filepath, htmlFileName));
@@ -32,8 +33,9 @@ const pageLoader = (domain, filepath = process.cwd()) => {
         .then(() => fsp.mkdir(filesDestination, { recursive: true }));
     })
     .then(() => {
-      const links = extractAndReplaceLinks(html, domain).extractedLinks;
-      newHtml = extractAndReplaceLinks(html, domain).changedHtml;
+      // const links = extractAndReplaceLinks(html, domain).extractedLinksToDownload;
+      // newHtml = extractAndReplaceLinks(html, domain).changedHtml;
+      [links, newHtml] = extractAndReplaceLinks(html, domain);
       log(`downloading extracted resourses: ${links}`);
       return downloadLocalResources(links, domain, filesDestination);
     })
@@ -48,3 +50,7 @@ const pageLoader = (domain, filepath = process.cwd()) => {
 };
 
 export default pageLoader;
+
+// node bin/page-loader.js https://ru.hexlet.io/courses
+const hexlet = 'https://ru.hexlet.io/courses';
+// pageLoader(hexlet);

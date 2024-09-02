@@ -30,7 +30,13 @@ export const isAbsolute = (url) => {
   return regex.test(url);
 };
 
-export const absolutizeLinks = (links, domain) => links.map((link) => (isAbsolute(link) ? link : domain + link));
+export const absolutizeLink = (link, domain) => {
+  if (isAbsolute(link)) {
+    return link;
+  }
+  const url = new URL(domain);
+  return `${url.href}${link}`;
+};
 
 export const createHtmlFileName = (domain) => {
   const url = new URL(domain);
@@ -57,6 +63,3 @@ export const createAssetName = (link, domain) => {
 // const json = '/manifest.json';
 // const css = '/assets/application.css';
 // const domain = 'https://ru.hexlet.io/courses';
-// console.log(createAssetName(rss, domain));
-// console.log(createAssetName(json, domain));
-// console.log(createAssetName(css, domain));

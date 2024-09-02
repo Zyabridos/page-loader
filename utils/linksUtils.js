@@ -9,12 +9,11 @@ import {
   mappingTagsAndAttrbs,
   isSameDomain,
   createFolderName,
-  absolutizeLinks,
+  absolutizeLink,
 } from './smallUtils.js';
 
 export const downloadLocalResources = (links, domain, filepath) => {
-  const absLinksToDownload = absolutizeLinks(links, domain).filter((link) => isSameDomain(link, domain));
-  const promises = absLinksToDownload.map((link) => ({
+  const promises = links.map((link) => ({
     title: `downloading the file from ${link} and saving into ${filepath}`,
     task: () => axios.get(link, { responseType: 'arraybuffer' })
       .then((response) => {
@@ -33,20 +32,19 @@ export const downloadLocalResources = (links, domain, filepath) => {
 
 export const extractAndReplaceLinks = (html, domain) => {
   const $ = cheerio.load(html);
-  const extractedLinks = [];
+  const extractedLinksToDownload = [];
+  const newSrc = [];
   const entries = Object.entries(mappingTagsAndAttrbs);
 
   entries.forEach(([tag, attr]) => {
     $(tag).each((index, element) => {
       const href = $(element).attr(attr);
-      extractedLinks.push(href);
-      const newSrc = extractedLinks
-        .filter((currentHref) => isSameDomain(currentHref, domain))
-        .map((currentHref) => (`${createFolderName(domain)}_files/${createAssetName(currentHref, domain)}`));
       if (isSameDomain(href, domain) && href !== undefined) {
+        extractedLinksToDownload.push(absolutizeLink(href, domain));
+        newSrc.push((`${createFolderName(domain)}_files/${createAssetName(href, domain)}`));
         $(element).attr(attr, newSrc[index]);
       }
     });
   });
-  return { extractedLinks: uniq(extractedLinks).filter((link) => link !== undefined), changedHtml: $.html() };
+  return [uniq(extractedLinksToDownload).filter((link) => link !== undefined), $.html()];
 };
