@@ -1,4 +1,4 @@
-// @ts-check
+/* eslint-disable */
 import os from 'os';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';

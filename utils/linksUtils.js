@@ -20,11 +20,11 @@ export const downloadLocalResources = (links, domain, filepath) => {
         const fileName = createAssetName(link, domain);
         const filesDestination = path.join(filepath, fileName);
         return fsp.writeFile(filesDestination, response.data);
+      })
+      .catch((error) => {
+        console.error(`An error has occured: ${createAssetName(link, domain)} was not saved, ${error}`);
+        throw new Error(error.message);
       }),
-    // .catch((error) => {
-    //   console.error(`An error has occured: ${createAssetName(link, domain)} was not saved, ${error}`);
-    //   throw new Error(error.message);
-    // }),
   }));
 
   return new Listr(promises, { recursive: true, exitOnError: false }).run().catch(() => {});

@@ -17,9 +17,6 @@ const pageLoader = (domain, filepath = process.cwd()) => {
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
   const htmlFileName = createHtmlFileName(domain);
   const htmlFileFolder = path.join((filepath, htmlFileName));
-
-  // const { links, newHtml } = extractAndReplaceLinks(html, domain);
-
   const filesDestination = path.join(filepath, `${createFolderName(domain)}_files`);
 
   return axios.get(domain)
@@ -41,7 +38,11 @@ const pageLoader = (domain, filepath = process.cwd()) => {
           return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
         });
     })
-    .then(() => path.join(filepath));
+    .then(() => path.join(filepath))
+    .catch((e) => {
+      console.error(`An error has occurred: ${e.message}`);
+      throw new Error(e.message);
+    });
 };
 
 export default pageLoader;
