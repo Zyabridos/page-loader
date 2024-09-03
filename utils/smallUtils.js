@@ -30,9 +30,17 @@ export const isAbsolute = (url) => {
   return regex.test(url);
 };
 
-export const absolutizeLink = (link, domain) => {
-  const url = new URL(domain);
-  return `${url.protocol}//${url.hostname}${url.pathname}`;
+const url = 'articles';
+const base = 'https://developer.mozilla.org/some/path';
+const constructorResult = new URL(url, base);
+// => https://developer.mozilla.org/some/articles
+
+export const absolutizeLink = (relative, domainBase) => {
+  if (isAbsolute(relative)) {
+    return relative;
+  }
+  const absolureUrl = new URL(relative, domainBase);
+  return absolureUrl.href;
 };
 
 export const createHtmlFileName = (domain) => {
