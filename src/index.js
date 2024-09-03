@@ -38,11 +38,11 @@ const pageLoader = (domain, filepath = process.cwd()) => {
           return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
         });
     })
-    .then(() => path.join(filepath))
-    .catch((e) => {
-      console.error(`An error has occurred: ${e.message}`);
-      throw new Error(e.message);
-    });
+    .then(() => path.join(filepath));
+  // .catch((e) => {
+  //   console.error(`An error has occurred: ${e.message}`);
+  //   throw new Error(e.message);
+  // });
 };
 
 export default pageLoader;

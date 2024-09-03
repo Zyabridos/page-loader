@@ -20,11 +20,11 @@ export const downloadLocalResources = (links, domain, filepath) => {
         const fileName = createAssetName(link, domain);
         const filesDestination = path.join(filepath, fileName);
         return fsp.writeFile(filesDestination, response.data);
-      })
-      .catch((error) => {
-        console.error(`An error has occured: ${createAssetName(link, domain)} was not saved, ${error}`);
-        throw new Error(error.message);
       }),
+    .catch((error) => {
+      console.error(`An error has occured: ${createAssetName(link, domain)} was not saved, ${error}`);
+      throw new Error(error.message);
+    }),
   }));
 
   return new Listr(promises, { recursive: true, exitOnError: false }).run().catch(() => {});
@@ -36,12 +36,10 @@ export const extractAndReplaceLinks = (html, domain) => {
   const entries = Object.entries(mappingTagsAndAttrbs);
 
   entries.forEach(([tag, attr]) => {
-    $(tag).each((index, element) => {
+    $(tag).each((_, element) => {
       const href = $(element).attr(attr);
       if (isSameDomain(href, domain) && href !== undefined) {
         links.push(absolutizeLink(href, domain));
-        const parsedAttr = new URL($(element).attr(attr), domain);
-        console.log(parsedAttr);
         $(element).attr(attr, (`${createFolderName(domain)}_files/${createAssetName(href, domain)}`));
       }
     });

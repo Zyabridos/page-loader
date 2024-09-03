@@ -30,13 +30,17 @@ export const isAbsolute = (url) => {
   return regex.test(url);
 };
 
+// export const absolutizeLink = (link, domain) => {
+//   if (isAbsolute(link)) {
+//     return link;
+//   }
+//   const url = new URL(domain);
+//   return `${url.origin}${link}`;
+// };
+
 export const absolutizeLink = (link, domain) => {
-  let absoluteUrl = link;
-  if (!isAbsolute(link)) {
-    absoluteUrl = domain + link;
-  }
-  const { name, ext, dir } = path.parse(absoluteUrl);
-  return `${dir}/${name}${ext}`;
+  const url = new URL(domain);
+  return `${url.protocol}//${url.hostname}${url.pathname}`;
 };
 
 export const createHtmlFileName = (domain) => {
@@ -59,3 +63,8 @@ export const createAssetName = (link, domain) => {
   const url = new URL(domain);
   return replaceSymbolsWithDash(url.hostname + fileName) + (ext || '.html');
 };
+
+console.log(absolutizeLink('/assets/professions/nodejs.png,', 'https://ru.hexlet.io/courses'));
+console.log(absolutizeLink('/photos/me.jpg', 'https://site.com/blog/about'));
+console.log(absolutizeLink('/blog/about', 'https://site.com/blog/about'));
+// console.log(isAbsolute('https://site.com/blog/about/blog/about'));
