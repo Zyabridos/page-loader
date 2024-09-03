@@ -31,11 +31,12 @@ export const isAbsolute = (url) => {
 };
 
 export const absolutizeLink = (link, domain) => {
-  if (isAbsolute(link)) {
-    return link;
+  let absoluteUrl = link;
+  if (!isAbsolute(link)) {
+    absoluteUrl = domain + link;
   }
-  const url = new URL(domain);
-  return `${url.href}${link}`;
+  const { name, ext, dir } = path.parse(absoluteUrl);
+  return `${dir}/${name}${ext}`;
 };
 
 export const createHtmlFileName = (domain) => {
