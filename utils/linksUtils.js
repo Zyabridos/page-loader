@@ -32,19 +32,17 @@ export const downloadLocalResources = (links, domain, filepath) => {
 
 export const extractAndReplaceLinks = (html, domain) => {
   const $ = cheerio.load(html);
-  const extractedLinksToDownload = [];
-  const newSrc = [];
+  const links = [];
   const entries = Object.entries(mappingTagsAndAttrbs);
 
   entries.forEach(([tag, attr]) => {
     $(tag).each((index, element) => {
       const href = $(element).attr(attr);
       if (isSameDomain(href, domain) && href !== undefined) {
-        extractedLinksToDownload.push(absolutizeLink(href, domain));
-        newSrc.push((`${createFolderName(domain)}_files/${createAssetName(href, domain)}`));
-        $(element).attr(attr, newSrc[index]);
+        links.push(absolutizeLink(href, domain));
+        $(element).attr(attr, (`${createFolderName(domain)}_files/${createAssetName(href, domain)}`));
       }
     });
   });
-  return [uniq(extractedLinksToDownload).filter((link) => link !== undefined), $.html()];
+  return { links: uniq(links), newHtml: $.html() };
 };

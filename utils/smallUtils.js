@@ -58,8 +58,3 @@ export const createAssetName = (link, domain) => {
   const url = new URL(domain);
   return replaceSymbolsWithDash(url.hostname + fileName) + (ext || '.html');
 };
-
-// const rss = 'https://ru.hexlet.io/lessons.rss';
-// const json = '/manifest.json';
-// const css = '/assets/application.css';
-// const domain = 'https://ru.hexlet.io/courses';

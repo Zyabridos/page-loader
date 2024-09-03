@@ -51,7 +51,7 @@ test('html-file name is correct', async () => {
 test('html-file data is correct', async () => {
   await pageLoader(domain, tempDir);
   const fileData = await fsp.readFile(path.join(tempDir, htmlFileName), { encoding: 'utf8' });
-  expect(fileData).toEqual(expected);
+  expect(fileData).toEqual(expected.trim());
 });
 
 test('html-attached files are downloaded correct', async () => {

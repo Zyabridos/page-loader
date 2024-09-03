@@ -14,11 +14,11 @@ const log = debug('page-loader.js');
 
 const pageLoader = (domain, filepath = process.cwd()) => {
   let html;
-  let newHtml;
-  let links;
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
   const htmlFileName = createHtmlFileName(domain);
   const htmlFileFolder = path.join((filepath, htmlFileName));
+
+  // const { links, newHtml } = extractAndReplaceLinks(html, domain);
 
   const filesDestination = path.join(filepath, `${createFolderName(domain)}_files`);
 
@@ -33,24 +33,15 @@ const pageLoader = (domain, filepath = process.cwd()) => {
         .then(() => fsp.mkdir(filesDestination, { recursive: true }));
     })
     .then(() => {
-      // const links = extractAndReplaceLinks(html, domain).extractedLinksToDownload;
-      // newHtml = extractAndReplaceLinks(html, domain).changedHtml;
-      [links, newHtml] = extractAndReplaceLinks(html, domain);
+      const { links, newHtml } = extractAndReplaceLinks(html, domain);
       log(`downloading extracted resourses: ${links}`);
-      return downloadLocalResources(links, domain, filesDestination);
-    })
-    .then(() => {
-      log(`writing result to ${htmlFileFolder}`);
-      return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
+      return downloadLocalResources(links, domain, filesDestination)
+        .then(() => {
+          log(`writing result to ${htmlFileFolder}`);
+          return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
+        });
     })
     .then(() => path.join(filepath));
-  // .catch((error) => {
-  //   console.error(`An error has occured ${error.message}`);
-  // });
 };
 
 export default pageLoader;
-
-// node bin/page-loader.js https://ru.hexlet.io/courses
-const hexlet = 'https://ru.hexlet.io/courses';
-// pageLoader(hexlet);
