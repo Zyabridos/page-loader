@@ -30,14 +30,6 @@ export const isAbsolute = (url) => {
   return regex.test(url);
 };
 
-export const absolutizeLink = (href, domainBase) => {
-  if (isAbsolute(href)) {
-    return href;
-  }
-  const url = new URL(domainBase);
-  return url.origin + href;
-};
-
 export const createHtmlFileName = (domain) => {
   const url = new URL(domain);
   const base = domain.split(`${url.protocol}//`)[1];

@@ -9,7 +9,6 @@ import {
   mappingTagsAndAttrbs,
   isSameDomain,
   createFolderName,
-  absolutizeLink,
 } from './smallUtils.js';
 
 export const downloadLocalResources = (links, domain, filepath) => {
@@ -39,8 +38,9 @@ export const extractAndReplaceLinks = (html, domain) => {
     $(tag).each((_, element) => {
       const href = $(element).attr(attr);
       if (isSameDomain(href, domain) && href !== undefined) {
-        links.push(absolutizeLink(href, domain));
-        $(element).attr(attr, (`${createFolderName(domain)}_files/${createAssetName(href, domain)}`));
+        const url = new URL(href, domain);
+        links.push(url.href);
+        $(element).attr(attr, (`${createFolderName(domain)}_files/${createAssetName(url.href, domain)}`));
       }
     });
   });
