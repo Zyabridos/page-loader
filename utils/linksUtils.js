@@ -40,7 +40,7 @@ export const extractAndReplaceLinks = (html, domain) => {
       if (isSameDomain(href, domain) && href !== undefined) {
         const url = new URL(href, domain);
         links.push(url.href);
-        $(element).attr(attr, (`${createFolderName(domain)}_files/${createAssetName(url.href, domain)}`));
+        $(element).attr(attr, (`${createFolderName(domain)}_files/${createAssetName(url.href)}`));
       }
     });
   });

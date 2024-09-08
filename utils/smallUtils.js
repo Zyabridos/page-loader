@@ -36,17 +36,10 @@ export const createHtmlFileName = (domain) => {
   return `${replaceSymbolsWithDash(base)}.html`;
 };
 
-export const createAssetName = (link, domain) => {
-  let absoluteUrl = link;
-  if (!isAbsolute(link)) {
-    absoluteUrl = domain + link;
-  }
-  const { name, ext, dir } = path.parse(absoluteUrl);
-  let newDir = dir.split(domain)[1];
-  if (newDir === undefined) {
-    newDir = '';
-  }
+export const createAssetName = (href) => {
+  const url = new URL(href);
+  const { name, ext, dir } = path.parse(href);
+  const newDir = dir.split(url.host)[1];
   const fileName = `${newDir}/${name}`;
-  const url = new URL(domain);
   return replaceSymbolsWithDash(url.hostname + fileName) + (ext || '.html');
 };

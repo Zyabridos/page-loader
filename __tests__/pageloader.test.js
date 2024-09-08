@@ -1,6 +1,6 @@
 /* eslint-disable */
 import os from 'os';
-import path, { dirname } from 'path';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import nock from 'nock';
 import fsp from 'fs/promises';
@@ -31,9 +31,9 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   nock('https://ru.hexlet.io').get('/courses').reply(200, response);
+  nock('https://ru.hexlet.io').get('/courses').reply(200, expected);
   nock('https://ru.hexlet.io').get('/courses/assets/application.css').reply(200, expectedCSS);
   nock('https://ru.hexlet.io').get('/courses/assets/professions/nodejs.png').reply(200, expectedPNG);
-  // nock('https://ru.hexlet.io').get('/courses/').reply(200, response);
   nock('https://ru.hexlet.io').get('/courses/packs/js/runtime.js').reply(200, expectedJS);
 });
 
@@ -43,7 +43,7 @@ afterEach(async () => {
 
 test('html-file name is correct', async () => {
   await pageLoader(domain, tempDir);
-  const actual = `${createHtmlFileName(domain)}`;
+  const actual = createHtmlFileName(domain);
   const expected = 'ru-hexlet-io-courses.html'
   expect(actual).toEqual(expected);
 });
@@ -56,9 +56,9 @@ test('html-file data is correct', async () => {
 
 test('html-attached files are downloaded correct', async () => {
   await pageLoader(domain, tempDir)
-  const actualPNG = await readActual('ru-hexlet-io-assets-professions-nodejs.png')
-  const actualCSS = await readActual('ru-hexlet-io-assets-application.css');
-  const actualJS = await readActual('ru-hexlet-io-packs-js-runtime.js');
+  const actualPNG = await readActual('ru-hexlet-io-courses-assets-professions-nodejs.png')
+  const actualCSS = await readActual('ru-hexlet-io-courses-assets-application.css');
+  const actualJS = await readActual('ru-hexlet-io-courses-packs-js-runtime.js');
 
   expect(actualPNG).toEqual(expectedPNG);
   expect(actualCSS).toEqual(expectedCSS);
