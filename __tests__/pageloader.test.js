@@ -33,7 +33,7 @@ beforeEach(async () => {
   nock('https://ru.hexlet.io').get('/courses').reply(200, response);
   nock('https://ru.hexlet.io').get('/courses/assets/application.css').reply(200, expectedCSS);
   nock('https://ru.hexlet.io').get('/courses/assets/professions/nodejs.png').reply(200, expectedPNG);
-  nock('https://ru.hexlet.io').get('/courses/courses').reply(200, response);
+  // nock('https://ru.hexlet.io').get('/courses/').reply(200, response);
   nock('https://ru.hexlet.io').get('/courses/packs/js/runtime.js').reply(200, expectedJS);
 });
 
