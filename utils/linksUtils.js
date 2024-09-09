@@ -33,6 +33,7 @@ export const extractAndReplaceLinks = (html, domain) => {
   const $ = cheerio.load(html);
   const links = [];
   const entries = Object.entries(mappingTagsAndAttrbs);
+  const fileNames = [];
 
   entries.forEach(([tag, attr]) => {
     $(tag).each((_, element) => {
@@ -40,9 +41,10 @@ export const extractAndReplaceLinks = (html, domain) => {
       if (isSameDomain(href, domain) && href !== undefined) {
         const url = new URL(href, domain);
         links.push(url.href);
+        fileNames.push(createAssetName(url.href));
         $(element).attr(attr, (`${createFolderName(domain)}_files/${createAssetName(url.href)}`));
       }
     });
   });
-  return { links: uniq(links), newHtml: $.html() };
+  return { links: uniq(links), fileNames: uniq(fileNames), newHtml: $.html() };
 };

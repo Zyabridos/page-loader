@@ -9,3 +9,6 @@ lint:
 
 test:
 	npx jest
+
+page-loader:
+	node bin/page-loader.js

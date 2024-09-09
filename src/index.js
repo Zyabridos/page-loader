@@ -16,8 +16,8 @@ const pageLoader = (domain, filepath = process.cwd()) => {
   let html;
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
   const htmlFileName = createHtmlFileName(domain);
-  const htmlFileFolder = path.join((filepath, htmlFileName));
-  const filesDestination = path.join(filepath, `${createFolderName(domain)}_files`);
+  const htmlFileFolderPath = { filepath: path.resolve((filepath, htmlFileName)) };
+  const filesDestinationPath = path.resolve(filepath, `${createFolderName(domain)}_files`);
 
   return axios.get(domain)
     .then((response) => {
@@ -25,20 +25,21 @@ const pageLoader = (domain, filepath = process.cwd()) => {
       html = response.data;
     })
     .then(() => {
-      log(`checking the access to the ${filepath} and creating directories for files: ${filesDestination}`);
+      log(`checking the access to the ${filepath} and creating directories for files: ${filesDestinationPath}`);
       return fsp.access(filepath)
-        .then(() => fsp.mkdir(filesDestination, { recursive: true }));
+        .then(() => fsp.mkdir(filesDestinationPath, { recursive: true }));
     })
     .then(() => {
-      const { links, newHtml } = extractAndReplaceLinks(html, domain);
+      const { links, fileNames, newHtml } = extractAndReplaceLinks(html, domain);
       log(`downloading extracted resourses: ${links}`);
-      return downloadLocalResources(links, domain, filesDestination)
+      log(`file names are: ${fileNames}`);
+      return downloadLocalResources(links, domain, filesDestinationPath)
         .then(() => {
-          log(`writing result to ${htmlFileFolder}`);
+          log(`writing result to ${htmlFileFolderPath.filepath}`);
           return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
         });
     })
-    .then(() => path.join(filepath))
+    .then(() => htmlFileFolderPath.filepath)
     .catch((e) => {
       console.error(`An error has occurred: ${e.message}`);
       throw new Error(e.message);
