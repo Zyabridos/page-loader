@@ -1,5 +1,5 @@
 ### Hexlet tests and linter status:
-[![hexlet-check](https://github.com/Zyabridos/page-loader/actions/workflows/hexlet-check.yml/badge.svg?branch=main)](https://github.com/Zyabridos/page-loader/actions/workflows/hexlet-check.yml)
+[![hexlet-check](https://github.com/Zyabridos/page-loader/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Zyabridos/page-loader/actions/workflows/hexlet-check.yml)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/8f6ef9f2ab6b7a9a4403/maintainability)](https://codeclimate.com/github/Zyabridos/fullstack-javascript-project-4/maintainability)
 
