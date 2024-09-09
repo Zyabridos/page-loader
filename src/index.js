@@ -15,8 +15,9 @@ const log = debug('page-loader.js');
 const pageLoader = (domain, filepath = process.cwd()) => {
   let html;
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
+  log(domain);
+  log(typeof domain);
   const htmlFileName = createHtmlFileName(domain);
-  // const htmlFileFolderPath = { filepath: path.resolve((filepath, htmlFileName)) };
   const htmlFileFolderPath = path.resolve(filepath, htmlFileName);
   const filesDestinationPath = path.resolve(filepath, `${createFolderName(domain)}_files`);
 

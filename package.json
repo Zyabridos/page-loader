@@ -4,6 +4,9 @@
   "description": "my third progect",
   "main": "src/index.js",
   "type": "module",
+  "bin": {
+    "page-loader": "bin/page-loader.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
