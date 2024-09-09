@@ -20,7 +20,7 @@ $ make install
 1. Open  your terminal (in VS Code Cmd⌘ + J for Mac OS, Ctrl + J for Windows OS)
 2. To start the CLI app, run the following command:
 ```bash
-node bin/page-loader.js <url>
+page-loader <url>
 ```
 
 ## Options
@@ -28,18 +28,18 @@ node bin/page-loader.js <url>
 <li>The default output directory is working directory. If you want to change output directory, you have to run the command </li>
 
 ```bash
-node bin/page-loader.js --option <output directory> <url>
+page-loader --o <output directory> <url>
 ```
 
 <li>The CLI utile gives you a possibility to debug the program. If during the process there was an error and you want to define it, please run </li>
 
 ```bash
-node bin/page-loader.js --debug <url>
+page-loader --d <url>
 ```
 <li>If you need an additional information about the utile, please run </li>
 
 ```bash
-node bin/page-loader.js -h
+page-loader -h
 ```
 
 ### Demonstration of installed project with standart parameters:
