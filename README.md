@@ -43,7 +43,7 @@ node bin/page-loader.js -h
 ```
 
 ### Demonstration of installed project with standart parameters:
-[![asciicast](https://asciinema.org/a/pfSoJ2mvXWfxHYwEjv4mTZkTv.svg)](https://asciinema.org/a/pfSoJ2mvXWfxHYwEjv4mTZkTv)
+[![asciicast](https://asciinema.org/a/675351.svg)](https://asciinema.org/a/675351)
 
 ### Demonstration of installed project with different directory and debugging: 
-[![asciicast](https://asciinema.org/a/72WZiLHokJ8lTuPQCVhEewopq.svg)](https://asciinema.org/a/72WZiLHokJ8lTuPQCVhEewopq)
+[![asciicast](https://asciinema.org/a/675355.svg)](https://asciinema.org/a/675355)

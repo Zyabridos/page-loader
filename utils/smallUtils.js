@@ -32,7 +32,6 @@ export const isAbsolute = (url) => {
 
 export const createHtmlFileName = (domain) => {
   const url = new URL(domain);
-  // const base = domain.split(`${url.protocol}//`)[1];
   const base = domain.toString().split(`${url.protocol}//`)[1];
   return `${replaceSymbolsWithDash(base)}.html`;
 };
