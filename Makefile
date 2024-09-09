@@ -11,4 +11,5 @@ test:
 	npx jest
 
 page-loader:
-	node bin/page-loader.js
+	node bin/page-loader.js 
+	

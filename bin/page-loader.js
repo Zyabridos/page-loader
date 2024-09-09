@@ -19,7 +19,7 @@ program
     }
     return pageLoader(url, option.output)
       .then((filepath) => {
-        console.log(`The page ${url} was successfully dowloaded into ${filepath}`);
+        console.log(`The page ${url} was successfully dowloaded into ${filepath.filepath}`);
       })
       .catch((error) => {
         console.error(error.message);

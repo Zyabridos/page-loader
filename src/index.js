@@ -16,7 +16,8 @@ const pageLoader = (domain, filepath = process.cwd()) => {
   let html;
   log(`input data is domain: ${domain}, filepath: ${filepath}`);
   const htmlFileName = createHtmlFileName(domain);
-  const htmlFileFolderPath = { filepath: path.resolve((filepath, htmlFileName)) };
+  // const htmlFileFolderPath = { filepath: path.resolve((filepath, htmlFileName)) };
+  const htmlFileFolderPath = path.resolve(filepath, htmlFileName);
   const filesDestinationPath = path.resolve(filepath, `${createFolderName(domain)}_files`);
 
   return axios.get(domain)
@@ -35,11 +36,11 @@ const pageLoader = (domain, filepath = process.cwd()) => {
       log(`file names are: ${fileNames}`);
       return downloadLocalResources(links, domain, filesDestinationPath)
         .then(() => {
-          log(`writing result to ${htmlFileFolderPath.filepath}`);
+          log(`writing result to ${htmlFileFolderPath}`);
           return fsp.writeFile(path.join(filepath, htmlFileName), newHtml);
         });
     })
-    .then(() => htmlFileFolderPath.filepath)
+    .then(() => ({ filepath: htmlFileFolderPath }))
     .catch((e) => {
       console.error(`An error has occurred: ${e.message}`);
       throw new Error(e.message);
