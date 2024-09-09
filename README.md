@@ -1,9 +1,7 @@
 ### Hexlet tests and linter status:
-[![Actions Status](https://github.com/Zyabridos/fullstack-javascript-project-4/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Zyabridos/fullstack-javascript-project-4/actions)
+[![hexlet-check](https://github.com/Zyabridos/page-loader/actions/workflows/hexlet-check.yml/badge.svg?branch=main)](https://github.com/Zyabridos/page-loader/actions/workflows/hexlet-check.yml)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/8f6ef9f2ab6b7a9a4403/maintainability)](https://codeclimate.com/github/Zyabridos/fullstack-javascript-project-4/maintainability)
-
-[![Test Coverage](https://api.codeclimate.com/v1/badges/8f6ef9f2ab6b7a9a4403/test_coverage)](https://codeclimate.com/github/Zyabridos/fullstack-javascript-project-4/test_coverage)
 
 ### Description of the project
 This CLI utile allows to download a web-page to local computer for offline use. The CLI utile downloads html of the web-page and attachments, such as CSS, JavaScript and Images in the format .png .img
